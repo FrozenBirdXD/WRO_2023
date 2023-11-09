@@ -4,28 +4,55 @@ import runloop, math, time
 
 motor_pair.pair(motor_pair.PAIR_1, port.A, port.B)
 
+# single condition for line tracing (without loop)
 def line_tracer():
     if color_sensor.reflection(port.D) < 80:
-        motor_pair.move(motor_pair.PAIR_1, -int(((color_sensor.reflection(port.D) - 90) / 7) ** 2), velocity = 500)
+        motor_pair.move(motor_pair.PAIR_1, -int(((color_sensor.reflection(port.D) - 90) / 8) ** 2), velocity = 400)
     elif color_sensor.reflection(port.F) < 80:
-        motor_pair.move(motor_pair.PAIR_1, int(((color_sensor.reflection(port.F) - 90) / 7) ** 2), velocity = 500)
+        motor_pair.move(motor_pair.PAIR_1, int(((color_sensor.reflection(port.F) - 90) / 8) ** 2), velocity = 400)
+    else:
+        motor_pair.move(motor_pair.PAIR_1, 0, velocity = 500)
+
+def line_tracr():
+    valuel = color_sensor.reflection(port.D)
+    valuer = color_sensor.reflection(port.F)
+
+    if valuer < 80:
+        motor_pair.move(motor_pair.PAIR_1, int(((valuer - 90) / 8) ** 2), velocity = 400)
+    elif valuel < 80:
+        motor_pair.move(motor_pair.PAIR_1, -int(((valuel - 90) / 8) ** 2), velocity = 400)
+    else:
+        motor_pair.move(motor_pair.PAIR_1, 0, velocity = 500)
 
 
-def turn_left():
-    while True:
+# turn for an amount (steering -100 to 100)
+async def turn(steering: int,degrees: int):
+    await motor_pair.move_for_degrees(motor_pair.PAIR_1, degrees, steering, velocity = 100)
+
+# move 120 degrees forward
+async def move_before_turn():
+    await motor_pair.move_for_degrees(motor_pair.PAIR_1, 100, 0, velocity = 300)
+
+async def move_until_left():
+    while color_sensor.reflection(port.D) > 22: # follow line until left sensor reads black
         line_tracer()
-        if color_sensor.reflection(port.D) < 22:
-            motor_pair.move_for_degrees(motor_pair.PAIR_1, 180, -100, velocity = 100)
-        break
-        
-def turn_right():
-    while True:
+    await move_before_turn()                    # move a bit forward to compensate for turn
+
+async def move_until_right():
+    while color_sensor.reflection(port.F) > 22:
         line_tracer()
-        if color_sensor.reflection(port.F) < 30:
-            motor_pair.move(motor_pair.PAIR_1, 100, velocity = 500)
-            break
+    await move_before_turn()
+
+def deutsch():
+    motor.run(port.C, 500)
 
 async def main():
-    turn_left()
+    #deutsch()
+    #await move_until_left()
+    #await turn(-100,240)            # turn left
+    #await move_until_right()
+    #await turn(100,240)             # turn right
+    while True:
+        line_tracer()
 
 runloop.run(main())
