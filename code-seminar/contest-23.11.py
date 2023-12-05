@@ -7,6 +7,7 @@ import runloop
 motor_pair.pair(motor_pair.PAIR_1, port.A, port.B)
 
 def line_tracer(place: str, speed: int):
+    """Trace a black line, with one iteration of the pid programm. Continuous loop is needed"""
     if place == "left":
         ports = port.D
         x = -1
@@ -33,25 +34,28 @@ def line_tracer(place: str, speed: int):
     motor_pair.move(motor_pair.PAIR_1, int(x * pid), velocity = speed)
     last_error = error
 
-# turn for an amount (steering -100 to 100)
 async def turn(steering: int, degrees: int):
+    """Turn for a specific amount in degrees (steering -100 to 100)"""
     await motor_pair.move_for_degrees(motor_pair.PAIR_1, degrees, steering, velocity = 100)
 
-# move 120 degrees forward to compensate for turn
 async def move_before_turn():
+    """Move 120 degrees forward to compensate for turn"""
     await motor_pair.move_for_degrees(motor_pair.PAIR_1, 120, 0, velocity = 200)
 
 async def move_until_left():
-    while color_sensor.reflection(port.D) > 22: # follow line until left sensor reads black
+    """Follow black line until left sensor reads black"""
+    while color_sensor.reflection(port.D) > 22:
         line_tracer("right", 200)
-    await move_before_turn()                    # move a bit forward to compensate for turn
+    await move_before_turn()                  
 
 async def move_until_right():
+    """Follow black line until right sensor reads black"""
     while color_sensor.reflection(port.F) > 22:
         line_tracer("left", 200)
     await move_before_turn()
 
-def move_until_col(color: int):
+def move_until_col(color: int) -> list[int]:
+    """Follows black line until color sensor on the left senses the provided color (Black = 0, Magenta = 1, Purple = 2, Blue = 3, Azure = 4, Turquoise = 5, Green = 6, Yellow = 7, Orange = 8, Red = 9, White = 10, Unknown = -1)\n\nReturns list of sensed colors"""
     colors = []
     while color_sensor.color(port.D) != color:
         if color_sensor.color(port.D) not in colors:
@@ -59,28 +63,37 @@ def move_until_col(color: int):
         line_tracer("right", 200)
     return colors
 
-async def pic_up(v):
-    await motor.run_for_degrees(port.C,v * -100, 200)
+async def lower_grabber():
+    await motor.run_for_degrees(port.C, -100, 200)
 
-async def take_away(color: int):
-    await turn(-100, 368)
+async def raise_grabber():
+    await motor.run_for_degrees(port.C, -1 * -100, 200)
 
-    while color_sensor.color(port.F) != color:
-        motor_pair.move(motor_pair.PAIR_1, 0, velocity = 400)
-
-    # try
+async def turn_block_into_center():
+    """Turns the block into the center of the circle and backs up\n\nUses gyro to measure the amount turned"""
     motion_sensor.reset_yaw(0)
     while color_sensor.color(port.F) != 10:
         motor_pair.move(motor_pair.PAIR_1, 100, velocity = 100)
     await motor_pair.move_for_degrees(motor_pair.PAIR_1, 0, 0, velocity = 100)
-    await pic_up(-1)
+
+    await raise_grabber()
+
     await motor_pair.move_for_degrees(motor_pair.PAIR_1, -50, 0, velocity = 100)
     while motion_sensor.tilt_angles()[0] <= 0:
         motor_pair.move(motor_pair.PAIR_1, -100, velocity = 100)
     await motor_pair.move_for_degrees(motor_pair.PAIR_1, 0, 0, velocity = 100)
 
-async def drive_home(colors):
-    color = colors[1]
+async def take_away(color: int):
+    """Drives block into the circle with the provided color (Black = 0, Magenta = 1, Purple = 2, Blue = 3, Azure = 4, Turquoise = 5, Green = 6, Yellow = 7, Orange = 8, Red = 9, White = 10, Unknown = -1)"""
+    await turn(-100, 368) # turn almost 180°
+
+    while color_sensor.color(port.F) != color: # drives forward until certain color
+        motor_pair.move(motor_pair.PAIR_1, 0, velocity = 400)
+    
+    await turn_block_into_center();
+
+async def drive_home(color):
+    """Drives the robot into the home corner of the provided color from the circles in the center of the board"""
     if color == 7:
         await motor_pair.move_for_degrees(motor_pair.PAIR_1, -50, 0, velocity = 100)
         await turn(-100, 185)
@@ -113,7 +126,7 @@ async def drive_home(colors):
 
 def remove_invalid_colors(colors: list): 
     """Removes impossible colors from list"""
-    colors_to_remove = [0, 1, 4, 2, 5, 8, -1, 10] # List Comprehension: faster than if statements, since optimized with c and 
+    colors_to_remove = [-1, 0, 1, 2, 4, 5, 8, 10] # List Comprehension: faster than if statements, since optimized with c and 
     colors = [color for color in colors if color not in colors_to_remove]
     return colors
 
@@ -124,11 +137,13 @@ async def main():
    
     print(colors)
 
+    # turn
     await move_before_turn()
     await turn(-100, 180)
     await motor_pair.move_for_degrees(motor_pair.PAIR_1, 100, 0, velocity = 500)
-    await pic_up(1)
-    await take_away(colors[0])
-    await drive_home(colors)
+
+    await lower_grabber()
+    await take_away(colors[0]) # takes first element in array
+    await drive_home(colors[1])
 
 runloop.run(main())
