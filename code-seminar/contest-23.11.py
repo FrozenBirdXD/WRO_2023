@@ -1,5 +1,5 @@
 import color_sensor
-from hub import light_matrix, port
+from hub import light_matrix, port,motion_sensor
 import motor
 import motor_pair
 import runloop
@@ -37,7 +37,7 @@ def line_tracer(place: str, speed: int):
 async def turn(steering: int, degrees: int):
     await motor_pair.move_for_degrees(motor_pair.PAIR_1, degrees, steering, velocity = 100)
 
-# move 120 degrees forward
+# move 120 degrees forward to compensate for turn
 async def move_before_turn():
     await motor_pair.move_for_degrees(motor_pair.PAIR_1, 120, 0, velocity = 200)
 
@@ -54,7 +54,6 @@ async def move_until_right():
 def move_until_col(color: int):
     colors = []
     while color_sensor.color(port.D) != color:
-        # print(color_sensor.color(port.D))
         if color_sensor.color(port.D) not in colors:
             colors.append(color_sensor.color(port.D))
         line_tracer("right", 200)
@@ -64,25 +63,72 @@ async def pic_up(v):
     await motor.run_for_degrees(port.C,v * -100, 200)
 
 async def take_away(color: int):
-    await turn(-100, 370)
-
-    #await motor_pair.move_for_degrees(motor_pair.PAIR_1, -400, 0, velocity = 400)
+    await turn(-100, 368)
 
     while color_sensor.color(port.F) != color:
         motor_pair.move(motor_pair.PAIR_1, 0, velocity = 400)
-    await motor_pair.move_for_degrees(motor_pair.PAIR_1, -50, 0, velocity = 100)
 
+    # try
+    motion_sensor.reset_yaw(0)
+    while color_sensor.color(port.F) != 10:
+        motor_pair.move(motor_pair.PAIR_1, 100, velocity = 100)
+    await motor_pair.move_for_degrees(motor_pair.PAIR_1, 0, 0, velocity = 100)
+    await pic_up(-1)
+    await motor_pair.move_for_degrees(motor_pair.PAIR_1, -50, 0, velocity = 100)
+    while motion_sensor.tilt_angles()[0] <= 0:
+        motor_pair.move(motor_pair.PAIR_1, -100, velocity = 100)
+    await motor_pair.move_for_degrees(motor_pair.PAIR_1, 0, 0, velocity = 100)
+
+async def drive_home(colors):
+    color = colors[1]
+    if color == 7:
+        await motor_pair.move_for_degrees(motor_pair.PAIR_1, -50, 0, velocity = 100)
+        await turn(-100, 185)
+        await motor_pair.move_for_degrees(motor_pair.PAIR_1, 420, 0, velocity= 200)
+        await turn(-100, 185)
+        while color_sensor.color(port.F) != color:
+            motor_pair.move(motor_pair.PAIR_1, 0, velocity = 400)
+        await motor_pair.move_for_degrees(motor_pair.PAIR_1, 100, 0, velocity = 100)
+    elif color == 6:
+        await motor_pair.move_for_degrees(motor_pair.PAIR_1, -50, 0, velocity = 100)
+        await turn(-100, 185)
+        await motor_pair.move_for_degrees(motor_pair.PAIR_1, 420, 0, velocity = 200)
+        await turn(100, 185)
+        await motor_pair.move_for_degrees(motor_pair.PAIR_1, 1700, 0, velocity = 400)
+    elif color == 9:
+        await motor_pair.move_for_degrees(motor_pair.PAIR_1, -50, 0, velocity = 100)
+        await turn(100, 185)
+        await motor_pair.move_for_degrees(motor_pair.PAIR_1, 200, 0, velocity = 400)
+        while color_sensor.color(port.F) != color:
+            motor_pair.move(motor_pair.PAIR_1, 0, velocity = 400)
+        await motor_pair.move_for_degrees(motor_pair.PAIR_1, 50, 0, velocity = 100)
+    elif color == 3:
+        await motor_pair.move_for_degrees(motor_pair.PAIR_1, -50, 0, velocity = 100)
+        await turn(100, 185)
+        await motor_pair.move_for_degrees(motor_pair.PAIR_1, 1000, 0, velocity = 200)
+        await turn(-100, 185)
+        while color_sensor.color(port.F) != color:
+            motor_pair.move(motor_pair.PAIR_1, 0, velocity = 400)
+        await motor_pair.move_for_degrees(motor_pair.PAIR_1, 50, 0, velocity = 100)
+
+def remove_invalid_colors(colors: list): 
+    """Removes impossible colors from list"""
+    colors_to_remove = [0, 1, 4, 2, 5, 8, -1, 10] # List Comprehension: faster than if statements, since optimized with c and 
+    colors = [color for color in colors if color not in colors_to_remove]
+    return colors
 
 async def main():
-    await motor_pair.move_for_degrees(motor_pair.PAIR_1, 300, 0, velocity = 300)
-    colors = move_until_col(10)
-    colors.remove(-1)
+    await motor_pair.move_for_degrees(motor_pair.PAIR_1, 300, 0, velocity = 300) # move to find line
+    colors = move_until_col(10) # read block colors until block is white (10)
+    colors = remove_invalid_colors(colors) # remove impossible colors in list
+   
     print(colors)
+
     await move_before_turn()
     await turn(-100, 180)
     await motor_pair.move_for_degrees(motor_pair.PAIR_1, 100, 0, velocity = 500)
     await pic_up(1)
     await take_away(colors[0])
-    await pic_up(-1)
+    await drive_home(colors)
 
 runloop.run(main())
