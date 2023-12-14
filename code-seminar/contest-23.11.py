@@ -85,61 +85,105 @@ async def turn_block_into_center():
 
 async def take_away(color: int):
     """Drives block into the circle with the provided color (Black = 0, Magenta = 1, Purple = 2, Blue = 3, Azure = 4, Turquoise = 5, Green = 6, Yellow = 7, Orange = 8, Red = 9, White = 10, Unknown = -1)"""
-    await turn(-100, 368) # turn almost 180°
+    await turn(-100, 365) # turn almost 180°
 
     while color_sensor.color(port.F) != color: # drives forward until certain color
-        motor_pair.move(motor_pair.PAIR_1, 0, velocity = 400)
+        motor_pair.move(motor_pair.PAIR_1, 0, velocity = 500)
     
     await turn_block_into_center();
 
-async def drive_home(color):
+async def drive_home(colors):
     """Drives the robot into the home corner of the provided color from the circles in the center of the board"""
-    if color == 7:
+    color = colors[1]
+    if color == 7: # yellow
         await motor_pair.move_for_degrees(motor_pair.PAIR_1, -50, 0, velocity = 200)
         await turn(-100, 185)
         await motor_pair.move_for_degrees(motor_pair.PAIR_1, 420, 0, velocity = 800)
-        await turn(-100, 180)
+        await turn(-100, 173)
         while color_sensor.color(port.F) != color:
             motor_pair.move(motor_pair.PAIR_1, 0, velocity = 800)
-        await motor_pair.move_for_degrees(motor_pair.PAIR_1, 600, 0, velocity = 300)
+        await motor_pair.move_for_degrees(motor_pair.PAIR_1, 400, 0, velocity = 300)
+        await lower_grabber()
+        
 
+        # await turn(-100, 185)
+        # await motor_pair.move_for_degrees(motor_pair.PAIR_1, 1800, 0, velocity = 800)
+    elif color == 6: # green
+        await motor_pair.move_for_degrees(motor_pair.PAIR_1, -50, 0, velocity = 600)
         await turn(-100, 185)
-        await motor_pair.move_for_degrees(motor_pair.PAIR_1, 1800, 0, velocity = 800)
-    elif color == 6:
-        await motor_pair.move_for_degrees(motor_pair.PAIR_1, -50, 0, velocity = 200)
-        await turn(-100, 185)
-        await motor_pair.move_for_degrees(motor_pair.PAIR_1, 420, 0, velocity = 200)
+        await motor_pair.move_for_degrees(motor_pair.PAIR_1, 420, 0, velocity = 600)
         await turn(100, 185)
-        await motor_pair.move_for_degrees(motor_pair.PAIR_1, 1700, 0, velocity = 800)
+        await motor_pair.move_for_degrees(motor_pair.PAIR_1, 1900, 0, velocity = 900)
+        await lower_grabber()
 
-        await turn(-100, 368)
-        while color_sensor.color(port.F) != 7:
-            motor_pair.move(motor_pair.PAIR_1, 0, velocity = 800)
-        await motor_pair.move_for_degrees(motor_pair.PAIR_1, 600, 0, velocity = 300)
+        # await turn(-100, 368)
+        # while color_sensor.color(port.F) != 7:
+        #     motor_pair.move(motor_pair.PAIR_1, 0, velocity = 800)
+        # await motor_pair.move_for_degrees(motor_pair.PAIR_1, 600, 0, velocity = 300)
 
-        await turn(-100, 185)
-        await motor_pair.move_for_degrees(motor_pair.PAIR_1, 1800, 0, velocity = 800)
-    elif color == 9:
+        # await turn(-100, 185)
+        # await motor_pair.move_for_degrees(motor_pair.PAIR_1, 1800, 0, velocity = 800)
+    elif color == 9: # red
+        if colors[0] != 6:
+            while color_sensor.color(port.F) != 6:
+                motor_pair.move(motor_pair.PAIR_1, 0, velocity = -400)
+
         await motor_pair.move_for_degrees(motor_pair.PAIR_1, -50, 0, velocity = 200)
         await turn(100, 185)
         await motor_pair.move_for_degrees(motor_pair.PAIR_1, 200, 0, velocity = 800)
         while color_sensor.color(port.F) != color:
             motor_pair.move(motor_pair.PAIR_1, 0, velocity = 800)
-        await motor_pair.move_for_degrees(motor_pair.PAIR_1, 50, 0, velocity = 400)
+        await motor_pair.move_for_degrees(motor_pair.PAIR_1, 150, 0, velocity = 400)
 
-        await turn(100, 180)
-        await motor_pair.move_for_degrees(motor_pair.PAIR_1, 2200, 0, velocity = 800)
-    elif color == 3:
-        await motor_pair.move_for_degrees(motor_pair.PAIR_1, -50, 0, velocity = 200)
+        await turn(-100,176)
+        await motor_pair.move_for_degrees(motor_pair.PAIR_1, 900, 0, velocity = 400)
+        await lower_grabber()
+
+        # await turn(100, 180)
+        # await motor_pair.move_for_degrees(motor_pair.PAIR_1, 2200, 0, velocity = 800)
+    elif color == 3: # blue
+        await motor_pair.move_for_degrees(motor_pair.PAIR_1, -100, 0, velocity = 200)
         await turn(100, 185)
-        await motor_pair.move_for_degrees(motor_pair.PAIR_1, 1300, 0, velocity = 800)
-        await turn(-100, 185)
+        await motor_pair.move_for_degrees(motor_pair.PAIR_1, 1150, 0, velocity = 800)
+        await turn(-100, 179)
         while color_sensor.color(port.F) != color:
-            motor_pair.move(motor_pair.PAIR_1, 0, velocity = 800)
-        await motor_pair.move_for_degrees(motor_pair.PAIR_1, 50, 0, velocity = 200)
+            line_tracer("right",400)
+            # motor_pair.move(motor_pair.PAIR_1, 0, velocity = 800)
+        await turn(100,30)
+        await motor_pair.move_for_degrees(motor_pair.PAIR_1, 80, 0, velocity = 200)
+        await lower_grabber()
+        # await turn(-100, 368)
+        # await motor_pair.move_for_degrees(motor_pair.PAIR_1, 4300, 0, velocity = 800)
 
-        await turn(-100, 368)
-        await motor_pair.move_for_degrees(motor_pair.PAIR_1, 4300, 0, velocity = 800)
+async def winwerwinnerchickendinner(colors):
+    colorakt = colors[1]
+    colorgo = colors[2]
+    if colorakt == 9:
+        await turn(-100,10)
+        if colorgo == 3:
+            while color_sensor.color(port.F) != colorgo:
+                motor_pair.move(motor_pair.PAIR_1,0,velocity=800)
+
+            await motor_pair.move_for_degrees(motor_pair.PAIR_1,0,0,velocity=0)
+        elif colorgo == 6:
+            await motor_pair.move_for_degrees(motor_pair.PAIR_1, 1000, 0, velocity = 800)
+            await turn(-100,185)
+            while color_sensor.color(port.F) != colorgo:
+                motor_pair.move(motor_pair.PAIR_1,0,velocity=800)
+
+            await motor_pair.move_for_degrees(motor_pair.PAIR_1,0,0,velocity=0)
+
+        elif colorgo == 7:
+            await motor_pair.move_for_degrees(motor_pair.PAIR_1, 1000, 0, velocity = 800)
+            await turn(-100,185)
+            while color_sensor.color(port.F) != 6:
+                motor_pair.move(motor_pair.PAIR_1,0,velocity=800)
+            await turn(-100,185)
+            while color_sensor.color(port.F) != colorgo:
+                motor_pair.move(motor_pair.PAIR_1,0,velocity=800)
+
+            await motor_pair.move_for_degrees(motor_pair.PAIR_1,0,0,velocity=0)
+
 
 
 def remove_invalid_colors(colors: list): 
@@ -162,6 +206,7 @@ async def main():
 
     await lower_grabber()
     await take_away(colors[0]) # takes first element in array
-    await drive_home(colors[1])
+    await drive_home(colors)
+    await winwerwinnerchickendinner(colors)
 
 runloop.run(main())
