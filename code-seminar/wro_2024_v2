@@ -47,6 +47,10 @@ class DRIVE:
         self.left.run(left)
         self.right.run(-right)
     
+    def stop(self):
+        self.left.hold()
+        self.right.hold()
+
     def straight(self,speed,distance):
         angle = 360 * (distance/((self.diameter/2)*2*π))
         self.left.run_angle(speed, angle, then=Stop.HOLD, wait=True)
@@ -180,11 +184,11 @@ def close():
 def gyro_turn(deg):
     gyro.reset_angle(0)
     if deg > 0:
-        dir = 1
+        dire = 1
     elif deg < 0:
-        dir = -1
+        dire = -1
 
     while gyro.angle() != deg:
-        mnr.drive(150,100 * dir)
+        mnr.drive(100,1000 * dire)
     
     mnr.stop()
