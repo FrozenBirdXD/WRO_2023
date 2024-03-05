@@ -28,7 +28,7 @@ height.control.limits(1500,1000000000,8000)
 #Drivebase
 class DRIVE:
 
-    def __init__(self,left_motor,right_motor,wheel_diameter:int):
+    def __init__(self,left_motor,right_motor,wheel_diameter):
         self.left = left_motor
         self.right = right_motor
         self.diameter = wheel_diameter
@@ -54,8 +54,8 @@ class DRIVE:
 
 
 
-    
-mnr = DriveBase(left_motor,right_motor,axle_track = 175,wheel_diameter = 62.4)
+mnr = DRIVE(left_motor,right_motor,wheel_diameter = 62.4) 
+mnr2 = DriveBase(left_motor,right_motor,axle_track = 175,wheel_diameter = 62.4)
 
 #Sensors
 b_l_color = ColorSensor(Port.S4)
