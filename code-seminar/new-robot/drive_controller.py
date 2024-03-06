@@ -25,11 +25,6 @@ class DriveController:
         self.left_motor.hold()
         self.right_motor.hold()
 
-    def straight(self, speed, distance):
-        angle = 360 * (distance / ((self.wheel_diameter / 2) * 2 * 3.1415926))
-        self.left_motor.run_angle(speed, angle, then=Stop.HOLD, wait=True)
-        self.right_motor.run_angle(-speed, angle, then=Stop.HOLD, wait=True)
-
     def drive_distance(self, speed, distance_cm):
         # Calculate number of degrees to rotate
         circumference = self.wheel_diameter * 3.1415926

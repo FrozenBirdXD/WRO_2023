@@ -20,7 +20,7 @@ from drive_controller import DriveController
 # -----------------------------------------------------------------------
 
 # Constants
-Kp = 0.1  # can be larger
+Kp = 10  # can be larger
 Ki = 0.0000  # small
 Kd = 0.0  # small
 TARGET_REFLECTION = 27
@@ -29,15 +29,15 @@ TARGET_REFLECTION = 27
 ev3 = EV3Brick()
 
 # Motors
-left_motor = Motor(Port.A)
-right_motor = Motor(Port.B, positive_direction=Direction.CLOCKWISE)
+left_motor = Motor(Port.A, positive_direction = Direction.COUNTERCLOCKWISE)
+right_motor = Motor(Port.B, positive_direction= Direction.COUNTERCLOCKWISE)
 grabber_motor = Motor(Port.D)
 height_motor = Motor(Port.C)
 # Limits
-left_motor.control.limits(1500, 1000000000, 8000)
-right_motor.control.limits(1500, 1000000000, 8000)
-grabber_motor.control.limits(1500, 1000000000, 8000)
-height_motor.control.limits(1500, 1000000000, 8000)
+left_motor.control.limits(1500, 10000, 100)
+right_motor.control.limits(1500, 10000, 100)
+grabber_motor.control.limits(1500, 10000, 100)
+height_motor.control.limits(1500, 10000, 100)
 
 # Sensors
 left_color_sensor = ColorSensor(Port.S4)
@@ -66,7 +66,7 @@ grabber = Grabber(
 
 
 def line_tracer(side: str):
-    global last_error
+    last_error = 0
 
     target = TARGET_REFLECTION
     integral = 0
@@ -85,7 +85,7 @@ def line_tracer(side: str):
     derative = error - last_error
 
     correction = (error * Kp) + (integral * Ki) + (derative * Kd)
-    mnr.drive(200, correction * multiplier)
+    mnr.drive(500, correction * multiplier)
 
     last_error = error
 
@@ -116,61 +116,24 @@ def straighten():
         left_value = left_color_sensor.reflection()
         right_value = right_color_sensor.reflection()
 
-
-# If the angle reading don't precisely match the target angle
-# (quite common), the while loop may become infinite, as it depends on an exact match
-# -> error we saw yesteray
-# -Matthew
 def gyro_turn(deg):
     gyro_sensor.reset_angle(0)
     if deg > 0:
-        dire = 1
-    elif deg < 0:
         dire = -1
+    elif deg < 0:
+        dire = 1
 
-    while gyro_sensor.angle() != deg:
-        mnr.drive(100, 1000 * dire)
+    while gyro_sensor.angle() < abs(deg * 0.963):
+        mnr.drive(300, 1000 * dire)
 
     mnr.stop()
 
 
-# Random zeug von Matthew
-def gyro_turn(degrees, direction):
-    gyro_sensor.reset_angle(0)
-
-    # Determine direction multiplier
-    if direction == "right":
-        multiplier = -1
-    elif direction == "left":
-        multiplier = 1
-    else:
-        raise ValueError("Invalid direction")
-
-    target_angle = degrees * multiplier
-    speed = 50
-
-    # Turning
-    while abs(gyro_sensor.angle()) < abs(target_angle):
-        # Adjust motor speeds based on remaining angle to turn
-        correction = (abs(target_angle) - abs(gyro_sensor.angle())) * 2
-        left_speed = speed - correction
-        right_speed = speed + correction
-
-        # --------------------
-        # without speed adjustment
-        # left_motor.run(50 * multiplier)
-        # right_motor.run(-50 * multiplier)
-        # --------------------
-
-        left_motor.run(left_speed)
-        right_motor.run(-right_speed)
-
-    left_motor.hold()
-    right_motor.hold()
-
-
 if __name__ == "__main__":
     # main program logic
-    mnr.drive(100, 0)
-    
-    pass
+    # mnr.drive(150,400)
+    # gyro_turn(90, "right")
+    # gyro_turn(-90)
+    while True:
+        line_tracer("left")
+
