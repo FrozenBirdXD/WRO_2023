@@ -17,6 +17,7 @@ from pybricks.media.ev3dev import SoundFile, ImageFile
 from grabber import Grabber
 from drive_controller import DriveController
 
+import time
 # -----------------------------------------------------------------------
 
 # Constants
@@ -31,13 +32,13 @@ ev3 = EV3Brick()
 # Motors
 left_motor = Motor(Port.A, positive_direction = Direction.COUNTERCLOCKWISE)
 right_motor = Motor(Port.B, positive_direction= Direction.COUNTERCLOCKWISE)
-grabber_motor = Motor(Port.D)
+graber_motor = Motor(Port.D)
 height_motor = Motor(Port.C)
 # Limits
 left_motor.control.limits(1500, 10000, 100)
 right_motor.control.limits(1500, 10000, 100)
-grabber_motor.control.limits(1500, 10000, 100)
-height_motor.control.limits(1500, 10000, 100)
+graber_motor.control.limits(1500, 10000, 100)
+height_motor.control.limits(1500, 1500, 100)
 
 # Sensors
 left_color_sensor = ColorSensor(Port.S4)
@@ -50,20 +51,37 @@ gyro_sensor = GyroSensor(Port.S1)
 # just initialize global objects
 
 mnr = DriveController(left_motor, right_motor, DriveController.WHEEL_DIAMETER)
-grabber = Grabber(
-    Grabber.OPEN_GRABBER,
-    Grabber.CLOSE_GRABBER,
-    Grabber.OPEN_GRABBER_FULL,
-    Grabber.HEIGHT_DOWN,
-    Grabber.HEIGHT_UP_1,
-    Grabber.HEIGHT_UP_2,
-    Grabber.HEIGHT_UP_3,
-    grabber_motor,
-    height_motor,
-)
+graber = Grabber(height_motor, graber_motor)
 
 # ----------------------------------------------------------------------------------------------
 
+def line_tracer2(side: str):
+    last_error = 0
+
+    target = TARGET_REFLECTION
+    integral = 0
+
+    if side == "right":
+        value = right_color_sensor.reflection()
+        multiplier = 1
+    elif side == "left":
+        value = left_color_sensor.reflection()
+        multiplier = -1
+    else:
+        raise ValueError("Invalid side")
+
+    error = target - value
+    integral += error
+    derative = error - last_error
+
+    correction = (error * Kp) + (integral * Ki) + (derative * Kd)
+    if correction > 0:
+        multipl = 1000
+    elif correction < 0:
+        multipl = -1000
+    mnr.drive(10, multipl * multiplier)
+
+    last_error = error
 
 def line_tracer(side: str):
     last_error = 0
@@ -123,7 +141,7 @@ def gyro_turn(deg):
     elif deg < 0:
         dire = 1
 
-    while gyro_sensor.angle() < abs(deg * 0.963):
+    while abs(gyro_sensor.angle()) < abs(deg * 0.964):
         mnr.drive(300, 1000 * dire)
 
     mnr.stop()
@@ -132,8 +150,38 @@ def gyro_turn(deg):
 if __name__ == "__main__":
     # main program logic
     # mnr.drive(150,400)
-    # gyro_turn(90, "right")
+    # gyro_turn(180)
+    # while True:
+        # line_tracer("left")
+
+    # height_motor.reset_angle(0)
+    # height_motor.run_target(500, -500, then=Stop.HOLD, wait=True)
+    # mnr.drive(400, 0)
+
+    # graber.nach_hinten_digga()
+
+    # graber.height_4()
+    # wait(1000)
+    # graber.graber_open()
+    # wait(1000)
+    # graber.height_2()
+    # wait(1000)
+    # graber.graber_close()
+    # wait(1000)
+    straighten()
+    # graber.height_up()
+    # graber.graber_open()
+    # mnr.drive_distance(400,96)
+    # wait(1000)
     # gyro_turn(-90)
-    while True:
-        line_tracer("left")
+    # mnr.drive_distance(400,65)
+    # wait(1000)
+    # StopWatch.time()
+    # while StopWatch.time() <= 300:
+    #     line_tracer()
+    # t_end = time.time() + 3
+    # while time.time() < t_end:
+    #     line_tracer("left")
+
+    pass
 
