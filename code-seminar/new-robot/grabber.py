@@ -62,7 +62,7 @@ class Grabber:
         self.height_motor.run_target(100, self.height_up_2, then=Stop.HOLD, wait=True)
 
     def nach_hinten_digga(self):
-        self.height_motor.run_angle(300, 100, then=Stop.HOLD, wait=True)
+        self.height_motor.run_angle(300, 1000, then=Stop.HOLD, wait=True)
 
     def graber_close(self):
         self.graber_motor.run_target(800, self.CLOSE_GRABER, then=Stop.HOLD, wait=True)
@@ -90,11 +90,11 @@ class Grabber:
 
     # Constants
     OPEN_GRABER_FULL = 0
-    OPEN_GRABER = 250
+    OPEN_GRABER = -250
     CLOSE_GRABER = -580
-    HEIGHT_UP = 0
-    HEIGHT_1 = -670
-    HEIGHT_2 = -600
-    HEIGHT_4 = -520
+    HEIGHT_UP = 10 #0
+    HEIGHT_1 = -750 #-670
+    HEIGHT_2 = -680 #-600
+    HEIGHT_4 = -580 #-520
     HEIGHT_CARRY = -450
 

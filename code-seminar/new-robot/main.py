@@ -148,11 +148,12 @@ def gyro_turn(deg):
 
 
 if __name__ == "__main__":
+
     # main program logic
     # mnr.drive(150,400)
     # gyro_turn(180)
     # while True:
-        # line_tracer("left")
+    #     line_tracer("left")
 
     # height_motor.reset_angle(0)
     # height_motor.run_target(500, -500, then=Stop.HOLD, wait=True)
@@ -160,19 +161,19 @@ if __name__ == "__main__":
 
     # graber.nach_hinten_digga()
 
-    # graber.height_4()
-    # wait(1000)
-    # graber.graber_open()
-    # wait(1000)
-    # graber.height_2()
-    # wait(1000)
+    graber.height_4()
+    wait(1000)
     # graber.graber_close()
     # wait(1000)
-    straighten()
-    # graber.height_up()
-    # graber.graber_open()
+    graber.height_down()
+    wait(1000)
+    graber.graber_close()
+    wait(1000)
+    # straighten()
+    graber.height_up()
+    # graber.graber_open_full()
     # mnr.drive_distance(400,96)
-    # wait(1000)
+    wait(1000)
     # gyro_turn(-90)
     # mnr.drive_distance(400,65)
     # wait(1000)
