@@ -55,33 +55,6 @@ graber = Grabber(height_motor, graber_motor)
 
 # ----------------------------------------------------------------------------------------------
 
-def line_tracer2(side: str):
-    last_error = 0
-
-    target = TARGET_REFLECTION
-    integral = 0
-
-    if side == "right":
-        value = right_color_sensor.reflection()
-        multiplier = 1
-    elif side == "left":
-        value = left_color_sensor.reflection()
-        multiplier = -1
-    else:
-        raise ValueError("Invalid side")
-
-    error = target - value
-    integral += error
-    derative = error - last_error
-
-    correction = (error * Kp) + (integral * Ki) + (derative * Kd)
-    if correction > 0:
-        multipl = 1000
-    elif correction < 0:
-        multipl = -1000
-    mnr.drive(10, multipl * multiplier)
-
-    last_error = error
 
 def line_tracer(side: str):
     last_error = 0
@@ -107,32 +80,38 @@ def line_tracer(side: str):
 
     last_error = error
 
+def check_sensors():
+    while True:
+        print("left")
+        print(left_color_sensor.reflection())
+        print("right")
+        print(right_color_sensor.reflection())
 
 def straighten():
-    left_value = left_color_sensor.reflection()
-    right_value = right_color_sensor.reflection()
+    K = 7
+    left = left_color_sensor.reflection()
+    right = right_color_sensor.reflection()
+    while True:
+        left = left_color_sensor.reflection() - 3
+        error = TARGET_REFLECTION - left
+        speed_left = (error * K)
+        right = right_color_sensor.reflection()
+        error = TARGET_REFLECTION - right
+        speed_right = (error * K)
+        if left == right == TARGET_REFLECTION:
+            mnr.stop()
+            break
+        left_motor.run(-speed_left)
+        right_motor.run(speed_right)
 
-    while 25 < right_value < 30 and 25 < left_value < 30:
-        while right_value > 30 and left_value > 30:
-            mnr.drive(50, 0)
-            left_value = left_color_sensor.reflection()
-            right_value = right_color_sensor.reflection()
-
-        while right_value < 30 and left_value < 30:
-            mnr.drive(-50, 0)
-            left_value = left_color_sensor.reflection()
-            right_value = right_color_sensor.reflection()
-
-        while right_value > 30:
-            mnr.drive(50, 100)
-            right_value = right_color_sensor.reflection()
-
-        while left_value > 30:
-            mnr.drive(50, -100)
-            left_value = left_color_sensor.reflection()
-
-        left_value = left_color_sensor.reflection()
-        right_value = right_color_sensor.reflection()
+def open_pipe():
+    graber.graber_open_for_pipe_because_just_because()
+    graber.height_complete_breakdown()
+    graber.graber_open()
+    mnr.drive(250,400)
+    graber.yalla()
+    wait(400)
+    mnr.stop()
 
 def gyro_turn(deg):
     gyro_sensor.reset_angle(0)
@@ -163,24 +142,24 @@ if __name__ == "__main__":
 
     # graber.graber_close()
     # wait(1000)
-    graber.height_4()
-    wait(1000)
-    graber.height_down()
-    wait(1000)
-    graber.graber_close()
-    wait(1000)
-    graber.height_up()
-    graber.height_4()
-    wait(1000)
-    graber.height_down()
-    wait(1000)
-    graber.graber_close()
-    wait(1000)
-    graber.height_up()
+    # graber.height_4()
+    # wait(1000)
+    # graber.height_down()
+    # wait(1000)
+    # graber.graber_close()
+    # wait(1000)
+    # graber.height_up()
+    # graber.height_4()
+    # wait(1000)
+    # graber.height_down()
+    # wait(1000)
+    # graber.graber_close()
+    # wait(1000)
+    # graber.height_up()
     # straighten()
     # graber.graber_open_full()
     # mnr.drive_distance(400,96)
-    wait(1000)
+    # wait(1000)
     # gyro_turn(-90)
     # mnr.drive_distance(400,65)
     # wait(1000)
@@ -191,5 +170,10 @@ if __name__ == "__main__":
     # while time.time() < t_end:
     #     line_tracer("left")
 
+
+    # straighten()
+    # check_sensors()
+    # mnr.drive(499, 0)
+    open_pipe()
     pass
 

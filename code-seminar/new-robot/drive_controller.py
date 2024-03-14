@@ -22,8 +22,8 @@ class DriveController:
         self.right_motor.run(-right_speed)
 
     def stop(self):
-        self.left_motor.hold()
-        self.right_motor.hold()
+        self.left_motor.stop()
+        self.right_motor.stop()
 
     def drive_distance(self, speed, distance_mm):
         # Calculate number of degrees to rotate

@@ -54,12 +54,6 @@ class Grabber:
                 100, self.height_up_2, then=Stop.HOLD, wait=True
             )
 
-    def open_pipe(self):
-        self.height_motor.run_target(100, self.height_down, then=Stop.HOLD, wait=True)
-        self.graber_motor.run_target(
-            100, self.grab_open_full, then=Stop.HOLD, wait=True
-        )
-        self.height_motor.run_target(100, self.height_up_2, then=Stop.HOLD, wait=True)
 
     def nach_hinten_digga(self):
         self.height_motor.run_angle(300, 1000, then=Stop.HOLD, wait=True)
@@ -73,7 +67,7 @@ class Grabber:
     def graber_open_full(self):
         self.graber_motor.run_target(800, self.OPEN_GRABER_FULL, then=Stop.HOLD, wait=True)
 
-    def height_down(self):
+    def height_1(self):
         self.height_motor.run_target(800, self.HEIGHT_1, then=Stop.HOLD, wait=True)
 
     def height_up(self):
@@ -87,6 +81,15 @@ class Grabber:
 
     def height_carry(self):
         self.height_motor.run_target(800, self.HEIGHT_CARRY, then=Stop.HOLD, wait=True)
+    
+    def height_complete_breakdown(self):
+        self.height_motor.run_target(800, -900, then=Stop.HOLD, wait=True)
+    
+    def yalla(self):
+        self.height_motor.run_target(1500, -500, then=Stop.HOLD, wait=True)
+    
+    def graber_open_for_pipe_because_just_because(self):
+        self.graber_motor.run_target(800, -300, then=Stop.HOLD, wait=True)
 
     # Constants
     OPEN_GRABER_FULL = 0
