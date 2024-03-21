@@ -27,11 +27,11 @@ class DriveController:
 
     def drive_distance(self, speed, distance_mm):
         # Calculate number of degrees to rotate
-        circumference = self.wheel_diameter * 3.1415926
+        circumference = self.wheel_diameter * 3.14
         angle_degrees = (distance_mm / circumference) * 360
 
         self.left_motor.run_angle(speed, angle_degrees, then=Stop.HOLD, wait=False)
-        self.right_motor.run_angle(-speed, angle_degrees, then=Stop.HOLD, wait=False)
-
+        self.right_motor.run_angle(-speed, angle_degrees, then=Stop.HOLD, wait=True)
+        
     # constants
-    WHEEL_DIAMETER = 62.4  # in millimeters
+    WHEEL_DIAMETER = 58  # in millimeters

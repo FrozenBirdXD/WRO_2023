@@ -9,51 +9,6 @@ class Grabber:
         self.height_motor.reset_angle(0)
         self.graber_motor.reset_angle(0)
 
-    def pickup(self, level):
-        if level == 1:
-            self.graber_motor.run_target(100, self.grab_open, then=Stop.HOLD, wait=True)
-            self.height_motor.run_target(
-                100, self.height_down, then=Stop.HOLD, wait=True
-            )
-            self.graber_motor.run_target(
-                100, self.grab_close, then=Stop.HOLD, wait=True
-            )
-            self.height_motor.run_target(
-                100, self.height_up_2, then=Stop.HOLD, wait=True
-            )
-        elif level == 2:
-            self.height_motor.run_target(
-                100, self.height_up_1, then=Stop.HOLD, wait=True
-            )
-            self.graber_motor.run_target(100, self.grab_open, then=Stop.HOLD, wait=True)
-            self.height_motor.run_target(
-                100, self.height_down, then=Stop.HOLD, wait=True
-            )
-            self.graber_motor.run_target(
-                100, self.grab_close, then=Stop.HOLD, wait=True
-            )
-            self.height_motor.run_target(
-                100, self.height_up_2, then=Stop.HOLD, wait=True
-            )
-
-    def drop(self, level):
-        if level == 1:
-            self.height_motor.run_target(
-                100, self.height_down, then=Stop.HOLD, wait=True
-            )
-            self.graber_motor.run_target(100, self.grab_open, then=Stop.HOLD, wait=True)
-            self.height_motor.run_target(
-                100, self.height_up_2, then=Stop.HOLD, wait=True
-            )
-        elif level == 2:
-            self.height_motor.run_target(
-                100, self.height_up_1, then=Stop.HOLD, wait=True
-            )
-            self.graber_motor.run_target(100, self.grab_open, then=Stop.HOLD, wait=True)
-            self.height_motor.run_target(
-                100, self.height_up_2, then=Stop.HOLD, wait=True
-            )
-
 
     def nach_hinten_digga(self):
         self.height_motor.run_angle(300, 1000, then=Stop.HOLD, wait=True)
@@ -66,6 +21,9 @@ class Grabber:
 
     def graber_open_full(self):
         self.graber_motor.run_target(800, self.OPEN_GRABER_FULL, then=Stop.HOLD, wait=True)
+
+    def graber_ready(self):
+        self.graber_motor.run_target(800, self.READY_GRABER, then=Stop.HOLD, wait=True)
 
     def height_1(self):
         self.height_motor.run_target(800, self.HEIGHT_1, then=Stop.HOLD, wait=True)
@@ -93,6 +51,7 @@ class Grabber:
 
     # Constants
     OPEN_GRABER_FULL = 0
+    READY_GRABER = -490
     OPEN_GRABER = -250
     CLOSE_GRABER = -580
     HEIGHT_UP = 0 #0

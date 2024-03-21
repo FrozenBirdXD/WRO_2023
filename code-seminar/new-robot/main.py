@@ -37,7 +37,7 @@ height_motor = Motor(Port.C)
 # Limits
 left_motor.control.limits(1500, 10000, 100)
 right_motor.control.limits(1500, 10000, 100)
-graber_motor.control.limits(1500, 10000, 100)
+graber_motor.control.limits(1500, 1500, 100)
 height_motor.control.limits(1500, 1500, 100)
 
 # Sensors
@@ -87,8 +87,11 @@ def check_sensors():
         print("right")
         print(right_color_sensor.reflection())
 
-def straighten():
-    K = 7
+def straighten(direction:str):
+    if direction == "front":
+        K = 7
+    elif direction == "back":
+        K = -7
     left = left_color_sensor.reflection()
     right = right_color_sensor.reflection()
     while True:
@@ -116,64 +119,37 @@ def open_pipe():
 def gyro_turn(deg):
     gyro_sensor.reset_angle(0)
     if deg > 0:
-        dire = -1
-    elif deg < 0:
         dire = 1
+    elif deg < 0:
+        dire = -1
 
     while abs(gyro_sensor.angle()) < abs(deg * 0.964):
-        mnr.drive(300, 1000 * dire)
+        mnr.drive(200, 1000 * dire)
 
     mnr.stop()
 
 
 if __name__ == "__main__":
-
-    # main program logic
-    # mnr.drive(150,400)
-    # gyro_turn(180)
-    # while True:
-    #     line_tracer("left")
-
-    # height_motor.reset_angle(0)
-    # height_motor.run_target(500, -500, then=Stop.HOLD, wait=True)
-    # mnr.drive(400, 0)
-
-    # graber.nach_hinten_digga()
-
-    # graber.graber_close()
-    # wait(1000)
-    # graber.height_4()
-    # wait(1000)
-    # graber.height_down()
-    # wait(1000)
-    # graber.graber_close()
-    # wait(1000)
-    # graber.height_up()
-    # graber.height_4()
-    # wait(1000)
-    # graber.height_down()
-    # wait(1000)
-    # graber.graber_close()
-    # wait(1000)
-    # graber.height_up()
-    # straighten()
-    # graber.graber_open_full()
-    # mnr.drive_distance(400,96)
-    # wait(1000)
-    # gyro_turn(-90)
-    # mnr.drive_distance(400,65)
-    # wait(1000)
-    # StopWatch.time()
-    # while StopWatch.time() <= 300:
-    #     line_tracer()
-    # t_end = time.time() + 3
-    # while time.time() < t_end:
-    #     line_tracer("left")
-
-
-    # straighten()
-    # check_sensors()
-    # mnr.drive(499, 0)
-    open_pipe()
-    pass
+    mnr.drive_distance(500,200)
+    gyro_turn(90)
+    mnr.drive_distance(500,250)
+    gyro_turn(90)
+    straighten("front")
+    mnr.drive_distance(500,90)
+    graber.graber_ready()
+    graber.height_1()
+    graber.graber_close()
+    graber.height_carry()
+    mnr.drive_distance(500, -70)
+    gyro_turn(-90)
+    mnr.drive_distance(500,100)
+    gyro_turn(90)
+    straighten("back")
+    mnr.drive_distance(500,70)
+    graber.height_2()
+    graber.graber_ready()
+    graber.height_1()
+    graber.graber_close()
+    graber.height_carry()
+    mnr.drive_distance(500,-100)
 
