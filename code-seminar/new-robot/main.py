@@ -20,23 +20,17 @@ from drive_controller import DriveController
 import time
 # -----------------------------------------------------------------------
 
-# Constants
-Kp = 10  # can be larger
-Ki = 0.0000  # small
-Kd = 0.0  # small
-TARGET_REFLECTION = 27
-
 # Initialize EV3
 ev3 = EV3Brick()
 
 # Motors
 left_motor = Motor(Port.A, positive_direction = Direction.COUNTERCLOCKWISE)
-right_motor = Motor(Port.B, positive_direction= Direction.COUNTERCLOCKWISE)
+right_motor = Motor(Port.B, positive_direction = Direction.COUNTERCLOCKWISE)
 graber_motor = Motor(Port.D)
 height_motor = Motor(Port.C)
 # Limits
-left_motor.control.limits(1500, 10000, 100)
-right_motor.control.limits(1500, 10000, 100)
+left_motor.control.limits(1500, 5000, 100)
+right_motor.control.limits(1500, 5000, 100)
 graber_motor.control.limits(1500, 1500, 100)
 height_motor.control.limits(1500, 1500, 100)
 
@@ -50,35 +44,10 @@ gyro_sensor = GyroSensor(Port.S1)
 # ------------------------------------------------
 # just initialize global objects
 
-mnr = DriveController(left_motor, right_motor, DriveController.WHEEL_DIAMETER)
+mnr = DriveController(left_motor, right_motor, DriveController.WHEEL_DIAMETER, left_color_sensor, right_color_sensor, gyro_sensor)
 graber = Grabber(height_motor, graber_motor)
 
 # ----------------------------------------------------------------------------------------------
-
-
-def line_tracer(side: str):
-    last_error = 0
-
-    target = TARGET_REFLECTION
-    integral = 0
-
-    if side == "right":
-        value = right_color_sensor.reflection()
-        multiplier = 1
-    elif side == "left":
-        value = left_color_sensor.reflection()
-        multiplier = -1
-    else:
-        raise ValueError("Invalid side")
-
-    error = target - value
-    integral += error
-    derative = error - last_error
-
-    correction = (error * Kp) + (integral * Ki) + (derative * Kd)
-    mnr.drive(500, correction * multiplier)
-
-    last_error = error
 
 def check_sensors():
     while True:
@@ -87,25 +56,6 @@ def check_sensors():
         print("right")
         print(right_color_sensor.reflection())
 
-def straighten(direction:str):
-    if direction == "front":
-        K = 7
-    elif direction == "back":
-        K = -7
-    left = left_color_sensor.reflection()
-    right = right_color_sensor.reflection()
-    while True:
-        left = left_color_sensor.reflection() - 3
-        error = TARGET_REFLECTION - left
-        speed_left = (error * K)
-        right = right_color_sensor.reflection()
-        error = TARGET_REFLECTION - right
-        speed_right = (error * K)
-        if left == right == TARGET_REFLECTION:
-            mnr.stop()
-            break
-        left_motor.run(-speed_left)
-        right_motor.run(speed_right)
 
 def open_pipe():
     graber.graber_open_for_pipe_because_just_because()
@@ -116,40 +66,82 @@ def open_pipe():
     wait(400)
     mnr.stop()
 
-def gyro_turn(deg):
-    gyro_sensor.reset_angle(0)
-    if deg > 0:
-        dire = 1
-    elif deg < 0:
-        dire = -1
-
-    while abs(gyro_sensor.angle()) < abs(deg * 0.964):
-        mnr.drive(200, 1000 * dire)
-
-    mnr.stop()
-
 
 if __name__ == "__main__":
-    mnr.drive_distance(500,200)
-    gyro_turn(90)
+    #drive to first block
+    mnr.drive_distance(500,190)
+    mnr.turn(300, 90)
     mnr.drive_distance(500,250)
-    gyro_turn(90)
-    straighten("front")
-    mnr.drive_distance(500,90)
+    mnr.turn(300, 90)
+    mnr.straighten("front")
+    mnr.drive_distance(500,100)
+
+    #grab first block
     graber.graber_ready()
     graber.height_1()
     graber.graber_close()
     graber.height_carry()
-    mnr.drive_distance(500, -70)
-    gyro_turn(-90)
-    mnr.drive_distance(500,100)
-    gyro_turn(90)
-    straighten("back")
-    mnr.drive_distance(500,70)
+
+    #drive to second block
+    mnr.drive_distance(300, -70)
+    mnr.turn(250, -90)
+    mnr.drive_distance(300, 90)
+    mnr.turn(250, 90)
+    mnr.straighten("back")
+    mnr.drive_distance(300, 75)
+
+    #grab second block
     graber.height_2()
     graber.graber_ready()
     graber.height_1()
     graber.graber_close()
-    graber.height_carry()
-    mnr.drive_distance(500,-100)
+    
+    #grab first stack of blocks
+    graber.graber_ready()
+    graber.height_up()
+    mnr.turn(200, 20)
+    right_motor.run_angle(speed=200, rotation_angle=20, then=Stop.HOLD, wait=False)
+    mnr.drive_distance(300, 100)
 
+    #drive to thrid block
+    graber.height_carry()
+    mnr.drive_distance(300, -150)
+    mnr.turn(200, -20)
+
+    mnr.turn(200, -90)
+    mnr.drive_distance(300, 80)
+    mnr.turn(200, 90)
+
+    mnr.straighten("back")
+    mnr.drive_distance(300, 75)
+
+    #grab third block
+    graber.graber_ready()
+    graber.height_1()
+    graber.graber_close()
+    graber.height_carry()
+
+    #drive to fourth block
+    mnr.drive_distance(300, -70)
+    mnr.turn(200, -90)
+    mnr.drive_distance(300, 90)
+    mnr.turn(200, 90)
+    mnr.straighten("back")
+    mnr.drive_distance(300, 75)
+
+    #grab fourth block
+    graber.height_2()
+    graber.graber_ready()
+    graber.height_1()
+    graber.graber_close()
+
+    #grab second stack of blocks
+    graber.graber_ready()
+    graber.height_up()
+    mnr.turn(200, -20)
+    right_motor.run_angle(speed=200, rotation_angle=-20, then=Stop.HOLD, wait=False)
+    mnr.drive_distance(300, 100)
+
+    graber.height_carry()
+    mnr.drive_distance(300, -150)
+    mnr.turn(200, -20)
