@@ -25,7 +25,10 @@ class Graber:
         self.height_motor.run_target(800, self.HEIGHT_1, then=Stop.HOLD, wait=True)
 
     def height_up(self):
-        self.height_motor.run_target(800, self.HEIGHT_UP, then=Stop.HOLD, wait=True) 
+        self.height_motor.run_target(400, self.HEIGHT_UP, then=Stop.HOLD, wait=True) 
+
+    def height_up_aggressive(self):
+        self.height_motor.run_target(1000, self.HEIGHT_UP, then=Stop.HOLD, wait=True) 
 
     def height_4(self):
         self.height_motor.run_target(800, self.HEIGHT_4, then=Stop.HOLD, wait=True)
