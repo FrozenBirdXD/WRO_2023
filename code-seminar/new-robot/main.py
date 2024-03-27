@@ -14,7 +14,7 @@ from pybricks.robotics import DriveBase
 from pybricks.media.ev3dev import SoundFile, ImageFile
 
 # custom files
-from grabber import Grabber
+from graber import Graber
 from drive_controller import DriveController
 
 import time
@@ -45,7 +45,7 @@ gyro_sensor = GyroSensor(Port.S1)
 # just initialize global objects
 
 mnr = DriveController(left_motor, right_motor, DriveController.WHEEL_DIAMETER, left_color_sensor, right_color_sensor, gyro_sensor)
-graber = Grabber(height_motor, graber_motor)
+graber = Graber(height_motor, graber_motor)
 
 # ----------------------------------------------------------------------------------------------
 
@@ -66,15 +66,14 @@ def open_pipe():
     wait(400)
     mnr.stop()
 
-
-if __name__ == "__main__":
+def first_step():
     #drive to first block
-    mnr.drive_distance(500,190)
+    mnr.drive_distance(400, 190)
     mnr.turn(300, 90)
-    mnr.drive_distance(500,250)
+    mnr.drive_distance(400, 240)
     mnr.turn(300, 90)
-    mnr.straighten("front")
-    mnr.drive_distance(500,100)
+    # mnr.straighten("front")
+    mnr.drive_distance(400, 120)
 
     #grab first block
     graber.graber_ready()
@@ -87,7 +86,7 @@ if __name__ == "__main__":
     mnr.turn(250, -90)
     mnr.drive_distance(300, 90)
     mnr.turn(250, 90)
-    mnr.straighten("back")
+    # mnr.straighten("back")
     mnr.drive_distance(300, 75)
 
     #grab second block
@@ -105,14 +104,14 @@ if __name__ == "__main__":
 
     #drive to thrid block
     graber.height_carry()
-    mnr.drive_distance(300, -150)
+    mnr.drive_distance(300, -160)
     mnr.turn(200, -20)
 
     mnr.turn(200, -90)
     mnr.drive_distance(300, 80)
     mnr.turn(200, 90)
 
-    mnr.straighten("back")
+    # mnr.straighten("back")
     mnr.drive_distance(300, 75)
 
     #grab third block
@@ -126,7 +125,7 @@ if __name__ == "__main__":
     mnr.turn(200, -90)
     mnr.drive_distance(300, 90)
     mnr.turn(200, 90)
-    mnr.straighten("back")
+    # mnr.straighten("back")
     mnr.drive_distance(300, 75)
 
     #grab fourth block
@@ -135,13 +134,51 @@ if __name__ == "__main__":
     graber.height_1()
     graber.graber_close()
 
-    #grab second stack of blocks
-    graber.graber_ready()
-    graber.height_up()
-    mnr.turn(200, -20)
-    right_motor.run_angle(speed=200, rotation_angle=-20, then=Stop.HOLD, wait=False)
-    mnr.drive_distance(300, 100)
-
+    #put blocks on color
     graber.height_carry()
-    mnr.drive_distance(300, -150)
-    mnr.turn(200, -20)
+    mnr.drive_distance(400, -75)
+    # mnr.straighten("front")
+    mnr.drive_distance(400, -260)
+    mnr.turn(300, 90)
+    mnr.drive_distance(300, 290) 
+    graber.height_up()
+    mnr.drive_distance(300, -270)
+    graber.height_1()
+    graber.graber_open()
+    graber.height_carry()
+    mnr.drive_distance(300, -75)
+
+def second_step():
+    #grab other first block
+    mnr.turn(400, 90)
+    mnr.drive_distance(400, 120)
+    mnr.straighten("back")
+    mnr.drive_distance(400, 75)
+    graber.graber_ready()
+    graber.height_1()
+    graber.graber_close()
+    graber.height_carry()
+
+    #drive to second block
+    mnr.drive_distance(300, -70)
+    mnr.turn(250, -90)
+    mnr.drive_distance(300, 90)
+    mnr.turn(250, 91)
+    # mnr.straighten("back")
+    mnr.drive_distance(300, 75)
+    
+
+if __name__ == "__main__":
+    first_step() 
+    second_step()
+    
+    #grab second stack of blocks
+    # graber.graber_ready()
+    # graber.height_up()
+    # mnr.turn(200, -20)
+    # right_motor.run_angle(speed=200, rotation_angle=-20, then=Stop.HOLD, wait=False)
+    # mnr.drive_distance(300, 100)
+
+    # graber.height_carry()
+    # mnr.drive_distance(300, -150)
+    # mnr.turn(200, -20)

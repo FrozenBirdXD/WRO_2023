@@ -1,5 +1,5 @@
 from pybricks.ev3devices import Motor
-from pybricks.parameters import Stop, Direction
+from pybricks.parameters import Stop, Direction, Color
 from pybricks.ev3devices import (
     Motor,
     ColorSensor,
@@ -33,6 +33,13 @@ class DriveController:
 
         self.left_motor.run(left_speed)
         self.right_motor.run(-right_speed)
+
+    def drive_until(self, speed, color:Color):
+        while self.left_color_sensor.color is not color or self.right_color_sensor.color is not color:
+            self.left_motor.run(speed)
+            self.right_motor.run(-speed)
+        self.left_motor.hold()
+        self.right_motor.hold()
 
     def line_tracer(self, side: str, direction:str):
         if (direction == "back"):

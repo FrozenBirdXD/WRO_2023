@@ -2,16 +2,12 @@ from pybricks.parameters import Stop
 from pybricks.ev3devices import Motor
 
 
-class Grabber:
+class Graber:
     def __init__(self, height_motor:Motor, graber_motor:Motor):
         self.height_motor = height_motor
         self.graber_motor = graber_motor
         self.height_motor.reset_angle(0)
         self.graber_motor.reset_angle(0)
-
-
-    def nach_hinten_digga(self):
-        self.height_motor.run_angle(300, 1000, then=Stop.HOLD, wait=True)
 
     def graber_close(self):
         self.graber_motor.run_target(800, self.CLOSE_GRABER, then=Stop.HOLD, wait=True)
@@ -54,9 +50,9 @@ class Grabber:
     READY_GRABER = -490
     OPEN_GRABER = -250
     CLOSE_GRABER = -580
-    HEIGHT_UP = 10 #0
-    HEIGHT_1 = -750 #-670
-    HEIGHT_2 = -680 #-600
-    HEIGHT_4 = -600 #-520
+    HEIGHT_UP = 10 
+    HEIGHT_1 = -753 
+    HEIGHT_2 = -683 
+    HEIGHT_4 = -603 
     HEIGHT_CARRY = -450
 
