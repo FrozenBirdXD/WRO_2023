@@ -74,9 +74,9 @@ class DriveController:
     
     def straighten(self, direction:str):
         if direction == "front":
-            K = 7
+            K = 3
         elif direction == "back":
-            K = -7
+            K = -3
         left = self.left_color_sensor.reflection()
         right = self.right_color_sensor.reflection()
         while True:
@@ -112,7 +112,6 @@ class DriveController:
         self.right_motor.run_angle(speed, wheel_travel_distance, then=Stop.HOLD, wait=True)
 
     def gyro_turn(self, deg):
-        """deprecated"""
         self.gyro_sensor.reset_angle(0)
         if deg > 0:
             dire = 1
