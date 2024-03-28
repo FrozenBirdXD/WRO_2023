@@ -66,6 +66,98 @@ def open_pipe():
     wait(400)
     mnr.stop()
 
+def first_step_two():
+    #drive to first block
+    mnr.drive_distance(400, 190)
+    mnr.turn(300, 90)
+    mnr.drive_distance(400, 240)
+    mnr.turn(300, 90)
+    # mnr.straighten("front")
+    mnr.drive_distance(400, 120)
+
+    #grab first block
+    graber.graber_ready()
+    graber.height_1()
+    graber.graber_close()
+    graber.height_carry()
+
+    #drive to second block
+    mnr.drive_distance(300, -70)
+    mnr.turn(250, -90)
+    mnr.drive_distance(300, 90)
+    mnr.turn(250, 91)
+    # mnr.straighten("front")
+    mnr.drive_distance(300, 75)
+
+    #grab second block
+    graber.height_2()
+    graber.graber_ready()
+    graber.height_1()
+    graber.graber_close()
+    
+    #grab first stack of blocks
+    graber.graber_ready()
+    graber.height_up_aggressive()
+    mnr.turn(200, 20)
+    right_motor.run_angle(speed=200, rotation_angle=20, then=Stop.HOLD, wait=False)
+    mnr.drive_distance(200, 110)
+
+    #drive to thrid block
+    graber.height_carry()
+    mnr.drive_distance(300, -165)
+    mnr.turn(200, -20)
+
+    mnr.turn(200, -90)
+    mnr.drive_distance(300, 80)
+    mnr.turn(200, 91)
+
+    # mnr.straighten("back")
+    mnr.drive_distance(300, 75)
+
+    #grab third block
+    graber.graber_ready()
+    graber.height_1()
+    graber.graber_close()
+    graber.height_carry()
+
+    #drive to fourth block
+    mnr.drive_distance(300, -70)
+    mnr.turn(200, -90)
+    mnr.drive_distance(300, 90)
+    mnr.turn(200, 91)
+    # mnr.straighten("back")
+    mnr.drive_distance(300, 75)
+
+    #grab fourth block
+    graber.height_2()
+    graber.graber_ready()
+    graber.height_1()
+    graber.graber_close()
+
+    #put blocks on color
+    graber.height_carry()
+
+    #--------------------------------------new straighten with border
+    mnr.turn(200, 90)
+    mnr.drive_distance(200, 70)
+    mnr.turn(200, 90)
+    mnr.drive_distance(200, -140)
+    #--------------------------------------new 
+
+    mnr.drive_distance(400, 530)
+    mnr.turn(200, -90)
+    mnr.drive_distance(300, 170) 
+    graber.height_1()
+    graber.graber_open()
+    graber.height_carry()
+    mnr.drive_distance(300, -170)
+    mnr.turn(200, -90)
+    mnr.drive_distance(300, 40) 
+    mnr.turn(200, 90)
+    mnr.drive_distance(300, 170)
+
+    graber.height_up_aggressive()
+
 def first_step():
     #drive to first block
     mnr.drive_distance(400, 190)
@@ -138,14 +230,14 @@ def first_step():
     graber.height_carry()
 
     #--------------------------------------new straighten with border
-    mnr.turn(300, 90)
-    mnr.drive_distance(300, 70)
-    mnr.turn(300, 90)
-    mnr.drive_distance(250, -140)
+    mnr.turn(200, 90)
+    mnr.drive_distance(200, 70)
+    mnr.turn(200, 90)
+    mnr.drive_distance(200, -140)
     #--------------------------------------new 
 
     mnr.drive_distance(400, 490)
-    mnr.turn(300, -90)
+    mnr.turn(200, -90)
     mnr.drive_distance(300, 230) 
     graber.height_up()
     mnr.drive_distance(300, -280)
@@ -159,9 +251,9 @@ def first_step():
 def second_step():
     #grab other first block
     mnr.turn(400, 89)
-    mnr.drive_distance(400, 110)
-    # mnr.straighten("back")
-    mnr.drive_distance(400, 110)
+    mnr.drive_distance(400, 100)
+    mnr.straighten("front")
+    mnr.drive_distance(400, 100)
     graber.graber_ready()
     graber.height_1()
     graber.graber_close()
@@ -224,15 +316,31 @@ def second_step():
     graber.height_carry()
 
     #drive to color
-    mnr.drive_distance(250, -170)
+    mnr.drive_distance(250, -160)
     mnr.drive_distance(250, 100)
     mnr.turn(300, 90)
     mnr.drive_distance(250, 20)
     mnr.turn(300, 90)
     mnr.drive_distance(250, 100)
+
+    graber.height_4()
+    graber.graber_ready()
+    graber.height_up()
+
+    mnr.drive_distance(250, -100)
     
 
 if __name__ == "__main__":
-    first_step() 
+    # graber.graber_ready()
+    # graber.height_1()
+    # graber.graber_close()
+    # graber.height_carry()
+    # graber.height_up()
+    first_step_two() 
     second_step()
+    # while True:
+        # print(left_color_sensor.color())
+        # print(right_color_sensor.color())
+
+    
     
