@@ -113,6 +113,9 @@ class DriveController:
         self.left_motor.run_angle(speed, wheel_travel_distance, then=Stop.HOLD, wait=False)
         self.right_motor.run_angle(speed, wheel_travel_distance, then=Stop.HOLD, wait=True)
 
+
+
+    # TRUST ME BRO DONT CHANGE THIS SHIT
     def curve(self,speed, right_turn_rate,left_turn_rate, right_deg):
         left_speed = speed
         right_speed = speed
@@ -129,6 +132,7 @@ class DriveController:
             
 
     def shift(self,x,y,speed):
+        #dont fucking ask its math
         a = 0.5 * sqrt(y*y + x*x)
         beta = sinh(abs(y)/(2*a))
         alpha = (3.141)-2*beta
