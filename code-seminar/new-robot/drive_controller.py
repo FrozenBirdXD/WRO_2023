@@ -1,6 +1,7 @@
 from pybricks.ev3devices import Motor
 from pybricks.parameters import Stop, Direction, Color
 from pybricks.tools import wait
+from math import sqrt
 from pybricks.ev3devices import (
     Motor,
     ColorSensor,
@@ -112,17 +113,46 @@ class DriveController:
         self.left_motor.run_angle(speed, wheel_travel_distance, then=Stop.HOLD, wait=False)
         self.right_motor.run_angle(speed, wheel_travel_distance, then=Stop.HOLD, wait=True)
 
-    # def gyro_turn(self, deg):
-    #     self.gyro_sensor.reset_angle(0)
-    #     if deg > 0:
-    #         dire = 1
-    #     elif deg < 0:
-    #         dire = -1
+    def curve(self, speed, turn_rate, right_deg):
+        left_speed = speed
+        right_speed = speed
+        if turn_rate > 0:
+            right_speed *= (1000 - (turn_rate * 2)) / 1000
+        elif turn_rate < 0:
+            left_speed *= (1000 + (turn_rate * 2)) / 1000
+        
+        while abs(self.right_motor.angle()) < abs(right_deg()):
+            self.left_motor.run(left_speed)
+            self.right_motor.run(-right_speed)
+        
+        self.stop()
+        
 
-    #     while abs(self.gyro_sensor.angle()) < abs(deg * 0.964):
-    #         self.drive(200, 1000 * dire)
+    def shift(self,x,y,speed):
+        r_main = 0.5 * sqrt(y*y + x*x)
+        r_big= r_main + 0.5*self.WHEEL_BASE_WIDTH
+        r_small = r_main - 0.5*self.WHEEL_BASE_WIDTH
+        motor_angle_big = (((3.141*r_big)/2)/self.WHEEL_DIAMETER)*360
+        motor_angle_small = (((3.141*r_small)/2)/self.WHEEL_DIAMETER)*360
+        distance_big = (3.141*r_big)/2
+        distance_small = (3.141*r_small)/2
+        turn_rate = (1-(distance_big/distance_small))*1000
 
-    #     self.stop()
+        if x>0 and y>0:
+            self.curve(speed,turn_rate,motor_angle_small)
+            self.curve(speed,-turn_rate,motor_angle_big)
+        elif x<0 and y<0:
+            self.curve(-speed,-turn_rate,motor_angle_big)
+            self.curve(-speed,turn_rate,motor_angle_small)
+        elif x>0 and y<0:
+            self.curve(-speed,turn_rate,motor_angle_small)
+            self.curve(-speed,-turn_rate,motor_angle_big)
+        elif x<0 and y>0:
+            self.curve(speed,-turn_rate,motor_angle_big)
+            self.curve(speed,turn_rate,motor_angle_small)
+
+
+
     
     # constants
     WHEEL_DIAMETER = 58  # in millimeters
