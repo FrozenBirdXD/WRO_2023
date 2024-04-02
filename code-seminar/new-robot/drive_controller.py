@@ -1,5 +1,6 @@
 from pybricks.ev3devices import Motor
 from pybricks.parameters import Stop, Direction, Color
+from pybricks.tools import wait
 from pybricks.ev3devices import (
     Motor,
     ColorSensor,
@@ -14,25 +15,25 @@ TARGET_REFLECTION = 27
 
 # Drivebase
 class DriveController:
-    def __init__(self, left_motor: Motor, right_motor: Motor, wheel_diameter:int, left_color_sensor: ColorSensor, right_color_sensor: ColorSensor, gyro_sensor: GyroSensor):
+    def __init__(self, left_motor: Motor, right_motor: Motor, wheel_diameter:int, left_color_sensor: ColorSensor, right_color_sensor: ColorSensor):
         self.left_motor = left_motor
         self.right_motor = right_motor
         self.wheel_diameter = wheel_diameter
         self.left_color_sensor = left_color_sensor
         self.right_color_sensor = right_color_sensor
-        self.gyro_sensor = gyro_sensor
 
-    def drive(self, speed, turn_rate):
+    def drive(self, speed, turn_rate, time):
         left_speed = speed
         right_speed = speed
-
         if turn_rate > 0:
             right_speed *= (1000 - (turn_rate * 2)) / 1000
         elif turn_rate < 0:
             left_speed *= (1000 + (turn_rate * 2)) / 1000
-
+        
         self.left_motor.run(left_speed)
         self.right_motor.run(-right_speed)
+        wait(time)
+        self.stop()
 
     def drive_until(self, speed, color:Color):
         while self.left_color_sensor.color is not color or self.right_color_sensor.color is not color:
@@ -111,18 +112,18 @@ class DriveController:
         self.left_motor.run_angle(speed, wheel_travel_distance, then=Stop.HOLD, wait=False)
         self.right_motor.run_angle(speed, wheel_travel_distance, then=Stop.HOLD, wait=True)
 
-    def gyro_turn(self, deg):
-        self.gyro_sensor.reset_angle(0)
-        if deg > 0:
-            dire = 1
-        elif deg < 0:
-            dire = -1
+    # def gyro_turn(self, deg):
+    #     self.gyro_sensor.reset_angle(0)
+    #     if deg > 0:
+    #         dire = 1
+    #     elif deg < 0:
+    #         dire = -1
 
-        while abs(self.gyro_sensor.angle()) < abs(deg * 0.964):
-            self.drive(200, 1000 * dire)
+    #     while abs(self.gyro_sensor.angle()) < abs(deg * 0.964):
+    #         self.drive(200, 1000 * dire)
 
-        self.stop()
+    #     self.stop()
     
     # constants
     WHEEL_DIAMETER = 58  # in millimeters
-    WHEEL_BASE_WIDTH = 161
+    WHEEL_BASE_WIDTH = 161.5 #161

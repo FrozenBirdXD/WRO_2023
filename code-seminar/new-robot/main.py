@@ -29,8 +29,8 @@ right_motor = Motor(Port.B, positive_direction = Direction.COUNTERCLOCKWISE)
 graber_motor = Motor(Port.D)
 height_motor = Motor(Port.C)
 # Limits
-left_motor.control.limits(1500, 5000, 100)
-right_motor.control.limits(1500, 5000, 100)
+left_motor.control.limits(1500, 2500, 100)
+right_motor.control.limits(1500, 2500, 100)
 graber_motor.control.limits(1500, 1500, 100)
 height_motor.control.limits(1500, 1500, 100)
 
@@ -38,13 +38,11 @@ height_motor.control.limits(1500, 1500, 100)
 left_color_sensor = ColorSensor(Port.S4)
 right_color_sensor = ColorSensor(Port.S2)
 main_color_sensor = ColorSensor(Port.S3)
-gyro_sensor = GyroSensor(Port.S1)
-
 
 # ------------------------------------------------
 # just initialize global objects
 
-mnr = DriveController(left_motor, right_motor, DriveController.WHEEL_DIAMETER, left_color_sensor, right_color_sensor, gyro_sensor)
+mnr = DriveController(left_motor, right_motor, DriveController.WHEEL_DIAMETER, left_color_sensor, right_color_sensor)
 graber = Graber(height_motor, graber_motor)
 
 # ----------------------------------------------------------------------------------------------
@@ -66,7 +64,11 @@ def open_pipe():
     wait(400)
     mnr.stop()
 
-def first_step_two():
+def picup_r_y():
+    #straighten
+    mnr.drive_distance(300,-90)
+    mnr.drive_distance(200,80)
+    wait(100)
     #drive to first block
     mnr.drive_distance(400, 190)
     mnr.turn(300, 90)
@@ -84,8 +86,8 @@ def first_step_two():
     #drive to second block
     mnr.drive_distance(300, -70)
     mnr.turn(250, -90)
-    mnr.drive_distance(300, 90)
-    mnr.turn(250, 91)
+    mnr.drive_distance(300, 95)
+    mnr.turn(250, 90)
     # mnr.straighten("front")
     mnr.drive_distance(300, 75)
 
@@ -107,12 +109,14 @@ def first_step_two():
     mnr.drive_distance(300, -165)
     mnr.turn(200, -20)
 
+    wait(100)
+
     mnr.turn(200, -90)
     mnr.drive_distance(300, 80)
     mnr.turn(200, 91)
 
     # mnr.straighten("back")
-    mnr.drive_distance(300, 75)
+    mnr.drive_distance(300, 60)
 
     #grab third block
     graber.graber_ready()
@@ -137,35 +141,18 @@ def first_step_two():
     #put blocks on color
     graber.height_carry()
 
-    #--------------------------------------new straighten with border
-    mnr.turn(200, 90)
-    mnr.drive_distance(200, 70)
-    mnr.turn(200, 90)
-    mnr.drive_distance(200, -140)
-    #--------------------------------------new 
-
-    mnr.drive_distance(400, 530)
-    mnr.turn(200, -90)
-    mnr.drive_distance(300, 170) 
-    graber.height_1()
-    graber.graber_open()
-    graber.height_carry()
-    mnr.drive_distance(300, -170)
-    mnr.turn(200, -90)
-    mnr.drive_distance(300, 40) 
-    mnr.turn(200, 90)
-    mnr.drive_distance(300, 170)
-
-    graber.height_up_aggressive()
-
-def first_step():
+def picup_r_y_2():
+    #straighten
+    mnr.drive_distance(600,-90)
+    mnr.drive_distance(600,80)
+    wait(100)
     #drive to first block
-    mnr.drive_distance(400, 190)
+    mnr.drive_distance(700, 190)
     mnr.turn(300, 90)
-    mnr.drive_distance(400, 240)
+    mnr.drive_distance(700, 240)
     mnr.turn(300, 90)
     # mnr.straighten("front")
-    mnr.drive_distance(400, 120)
+    mnr.drive_distance(700, 120)
 
     #grab first block
     graber.graber_ready()
@@ -174,12 +161,12 @@ def first_step():
     graber.height_carry()
 
     #drive to second block
-    mnr.drive_distance(300, -70)
+    mnr.drive_distance(700, -70)
     mnr.turn(250, -90)
-    mnr.drive_distance(300, 90)
-    mnr.turn(250, 91)
+    mnr.drive_distance(700, 95)
+    mnr.turn(250, 90)
     # mnr.straighten("front")
-    mnr.drive_distance(300, 75)
+    mnr.drive_distance(700, 75)
 
     #grab second block
     graber.height_2()
@@ -192,19 +179,21 @@ def first_step():
     graber.height_up_aggressive()
     mnr.turn(200, 20)
     right_motor.run_angle(speed=200, rotation_angle=20, then=Stop.HOLD, wait=False)
-    mnr.drive_distance(200, 110)
+    mnr.drive_distance(300, 110)
 
     #drive to thrid block
     graber.height_carry()
-    mnr.drive_distance(300, -165)
+    mnr.drive_distance(700, -165)
     mnr.turn(200, -20)
 
+    wait(100)
+
     mnr.turn(200, -90)
-    mnr.drive_distance(300, 80)
+    mnr.drive_distance(700, 80)
     mnr.turn(200, 91)
 
     # mnr.straighten("back")
-    mnr.drive_distance(300, 75)
+    mnr.drive_distance(700, 60)
 
     #grab third block
     graber.graber_ready()
@@ -213,12 +202,12 @@ def first_step():
     graber.height_carry()
 
     #drive to fourth block
-    mnr.drive_distance(300, -70)
+    mnr.drive_distance(700, -70)
     mnr.turn(200, -90)
-    mnr.drive_distance(300, 90)
+    mnr.drive_distance(700, 90)
     mnr.turn(200, 91)
     # mnr.straighten("back")
-    mnr.drive_distance(300, 75)
+    mnr.drive_distance(700, 75)
 
     #grab fourth block
     graber.height_2()
@@ -229,99 +218,38 @@ def first_step():
     #put blocks on color
     graber.height_carry()
 
+def put_back_1():
     #--------------------------------------new straighten with border
     mnr.turn(200, 90)
-    mnr.drive_distance(200, 70)
+    mnr.drive_distance(600, 70)
     mnr.turn(200, 90)
-    mnr.drive_distance(200, -140)
+    mnr.drive_distance(600, -160)
     #--------------------------------------new 
 
-    mnr.drive_distance(400, 490)
+    mnr.drive_distance(800, 490)
     mnr.turn(200, -90)
-    mnr.drive_distance(300, 230) 
+    mnr.drive_distance(800, 220) 
     graber.height_up()
-    mnr.drive_distance(300, -280)
+    mnr.drive_distance(700, -280)
     graber.height_1()
     graber.graber_open()
     graber.height_carry()
-    mnr.drive_distance(300, -95)
+    mnr.drive_distance(700, -95)
 
     graber.height_up_aggressive()
 
-def second_step():
-    #grab other first block
-    mnr.turn(400, 89)
-    mnr.drive_distance(400, 100)
-    mnr.straighten("front")
-    mnr.drive_distance(400, 100)
-    graber.graber_ready()
-    graber.height_1()
-    graber.graber_close()
-    graber.height_carry()
+def rth():
+    mnr.drive(-700,265,1500)
+    wait(100)
+    mnr.drive_distance(300,-40)
 
-    #drive to second block
-    mnr.drive_distance(300, -70)
-    mnr.turn(250, -90)
-    mnr.drive_distance(300, 90)
-    mnr.turn(250, 91)
-    # mnr.straighten("back")
-    mnr.drive_distance(300, 75)
-
-    #get second block
-    graber.height_2()
-    graber.graber_ready()
-    graber.height_1()
-    graber.graber_close()
-
-    #grab stack
-    graber.graber_ready()
-    graber.height_up_aggressive()
-    mnr.turn(200, 20)
-    right_motor.run_angle(speed=200, rotation_angle=20, then=Stop.HOLD, wait=False)
-    mnr.drive_distance(200, 110)
-
-    #drive to thrid block
-    graber.height_carry()
-    mnr.drive_distance(300, -165)
-    mnr.turn(200, -20)
-
-    mnr.turn(200, -90)
-    mnr.drive_distance(300, 80)
-    mnr.turn(200, 91)
-
-    # mnr.straighten("back")
-    mnr.drive_distance(300, 75)
-
-    #grab third block
-    graber.graber_ready()
-    graber.height_1()
-    graber.graber_close()
-    graber.height_carry()
-
-
-    #drive to fourth block
-    mnr.drive_distance(300, -70)
-    mnr.turn(200, -90)
-    mnr.drive_distance(300, 90)
-    mnr.turn(200, 91)
-    # mnr.straighten("back")
-    mnr.drive_distance(300, 75)
-
-    #grab fourth block
-    graber.height_2()
-    graber.graber_ready()
-    graber.height_1()
-    graber.graber_close()
-
-    graber.height_carry()
-
-    #drive to color
+def put_back_2():
     mnr.drive_distance(250, -160)
     mnr.drive_distance(250, 100)
     mnr.turn(300, 90)
     mnr.drive_distance(250, 20)
     mnr.turn(300, 90)
-    mnr.drive_distance(250, 100)
+    mnr.drive_distance(250, 90)
 
     graber.height_4()
     graber.graber_ready()
@@ -329,18 +257,12 @@ def second_step():
 
     mnr.drive_distance(250, -100)
     
-
 if __name__ == "__main__":
-    # graber.graber_ready()
-    # graber.height_1()
-    # graber.graber_close()
-    # graber.height_carry()
-    # graber.height_up()
-    first_step_two() 
-    second_step()
-    # while True:
-        # print(left_color_sensor.color())
-        # print(right_color_sensor.color())
+    picup_r_y_2() 
+    put_back_1()
+    rth()
+    picup_r_y_2()
+    put_back_2()
 
     
     
