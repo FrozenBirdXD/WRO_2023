@@ -1,7 +1,7 @@
 from pybricks.ev3devices import Motor
 from pybricks.parameters import Stop, Direction, Color
 from pybricks.tools import wait
-from math import sqrt
+from math import sqrt,sin,cos,tan,sinh,cosh,tanh
 from pybricks.ev3devices import (
     Motor,
     ColorSensor,
@@ -113,43 +113,47 @@ class DriveController:
         self.left_motor.run_angle(speed, wheel_travel_distance, then=Stop.HOLD, wait=False)
         self.right_motor.run_angle(speed, wheel_travel_distance, then=Stop.HOLD, wait=True)
 
-    def curve(self, speed, turn_rate, right_deg):
+    def curve(self,speed, right_turn_rate,left_turn_rate, right_deg):
         left_speed = speed
         right_speed = speed
-        if turn_rate > 0:
-            right_speed *= (1000 - (turn_rate * 2)) / 1000
-        elif turn_rate < 0:
-            left_speed *= (1000 + (turn_rate * 2)) / 1000
         
-        while abs(self.right_motor.angle()) < abs(right_deg()):
-            self.left_motor.run(left_speed)
+        right_speed *= right_turn_rate
+        left_speed *= left_turn_rate
+
+        self.right_motor.reset_angle(0)
+        while abs(int(self.right_motor.angle())) < abs(right_deg):
+            self.left_motor.run(-left_speed)
             self.right_motor.run(-right_speed)
         
         self.stop()
-        
+            
 
     def shift(self,x,y,speed):
-        r_main = 0.5 * sqrt(y*y + x*x)
+        a = 0.5 * sqrt(y*y + x*x)
+        beta = sinh(abs(y)/(2*a))
+        alpha = (3.141)-2*beta
+        factor = alpha/(2*3.141)
+        b = (a/2)/cos(beta)
+    
+        r_main = b
         r_big= r_main + 0.5*self.WHEEL_BASE_WIDTH
         r_small = r_main - 0.5*self.WHEEL_BASE_WIDTH
-        motor_angle_big = (((3.141*r_big)/2)/self.WHEEL_DIAMETER)*360
-        motor_angle_small = (((3.141*r_small)/2)/self.WHEEL_DIAMETER)*360
-        distance_big = (3.141*r_big)/2
-        distance_small = (3.141*r_small)/2
-        turn_rate = (1-(distance_big/distance_small))*1000
+        motor_angle_big = (((3.141*r_big*2)*factor)/(self.WHEEL_DIAMETER*3.141))*360
+        motor_angle_small = (((3.141*r_small*2)*factor)/(self.WHEEL_DIAMETER*3.141))*360
+        turn_rate = (motor_angle_small/motor_angle_big)
 
         if x>0 and y>0:
-            self.curve(speed,turn_rate,motor_angle_small)
-            self.curve(speed,-turn_rate,motor_angle_big)
+            self.curve(speed,turn_rate,1,motor_angle_small)
+            self.curve(speed,1,turn_rate,motor_angle_big)
         elif x<0 and y<0:
-            self.curve(-speed,-turn_rate,motor_angle_big)
-            self.curve(-speed,turn_rate,motor_angle_small)
+            self.curve(-speed,1,turn_rate,motor_angle_big)
+            self.curve(-speed,turn_rate,1,motor_angle_small)
         elif x>0 and y<0:
-            self.curve(-speed,turn_rate,motor_angle_small)
-            self.curve(-speed,-turn_rate,motor_angle_big)
+            self.curve(-speed,turn_rate,1,motor_angle_small)
+            self.curve(-speed,1,turn_rate,motor_angle_big)
         elif x<0 and y>0:
-            self.curve(speed,-turn_rate,motor_angle_big)
-            self.curve(speed,turn_rate,motor_angle_small)
+            self.curve(speed,1,turn_rate,motor_angle_big)
+            self.curve(speed,turn_rate,1,motor_angle_small)
 
 
 
