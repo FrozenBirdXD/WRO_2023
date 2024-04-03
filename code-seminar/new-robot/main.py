@@ -202,21 +202,18 @@ def put_back_1():
     mnr.drive_distance(500, -210)
 
     #--------------------------------------new 
-    mnr.drive_distance(1500,300)
-    mnr.u_trun(1500,-300,0.25)
+    mnr.drive_distance(1000,340)
+    mnr.u_trun(600,-280,0.25)
     graber.height_up()
-    mnr.drive_distance(1500, -270)
+    mnr.drive_distance(1000, -295)
     graber.height_1()
     graber.graber_open()
-    graber.height_carry()
-    mnr.drive_distance(1500, -95)
-
     graber.height_up_aggressive()
 
 def rth():
-    mnr.drive(-700,265,1500)
-    wait(100)
-    mnr.drive_distance(300,-40)
+    mnr.drive_distance(1000,-220)
+    mnr.u_trun(-600, 300, 0.25)
+    mnr.drive_distance(1000, -130)
 
 def put_back_2():
     mnr.drive_distance(250, -160)
@@ -235,9 +232,9 @@ def put_back_2():
 if __name__ == "__main__":
     picup_r_y_2() 
     put_back_1()
-    # rth()
-    # picup_r_y_2()
-    # put_back_2()
+    rth()
+    picup_r_y_2()
+    put_back_2()
 
     
     
