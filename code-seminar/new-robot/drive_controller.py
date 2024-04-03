@@ -113,22 +113,40 @@ class DriveController:
         self.left_motor.run_angle(speed, wheel_travel_distance, then=Stop.HOLD, wait=False)
         self.right_motor.run_angle(speed, wheel_travel_distance, then=Stop.HOLD, wait=True)
 
+    def u_trun(self,speed,x,factor):
+        r_main = abs(x)/2
+        r_big= r_main + 0.5*self.WHEEL_BASE_WIDTH
+        r_small = r_main - 0.5*self.WHEEL_BASE_WIDTH
+        motor_angle_big = ((3.141*r_big*2*factor)/(self.WHEEL_DIAMETER*3.141))*402
+        motor_angle_small = (((3.141*r_small*2*factor))/(self.WHEEL_DIAMETER*3.141))*402
+        turn_rate = (motor_angle_small/motor_angle_big)
+        if x>0:
+            self.curve_u_turn(speed,turn_rate,1,motor_angle_small,motor_angle_big)
+        elif x<0:
+            self.curve_u_turn(speed,1,turn_rate,motor_angle_big,motor_angle_small)
 
 
     # TRUST ME BRO DONT CHANGE THIS SHIT
-    def curve(self,speed, right_turn_rate,left_turn_rate, right_deg):
+    def curve_u_turn(self,speed, right_turn_rate,left_turn_rate, right_deg, left_deg):
         left_speed = speed
         right_speed = speed
         
         right_speed *= right_turn_rate
         left_speed *= left_turn_rate
 
-        self.right_motor.reset_angle(0)
-        while abs(int(self.right_motor.angle())) < abs(right_deg):
-            self.left_motor.run(-left_speed)
-            self.right_motor.run(-right_speed)
+        self.left_motor.run_angle(left_speed,left_deg,then=Stop.HOLD,wait=False)
+        self.right_motor.run_angle(-right_speed,right_deg,then=Stop.HOLD,wait=True)
+
+
+    def curve_shift(self,speed, right_turn_rate,left_turn_rate, right_deg, left_deg):
+        left_speed = speed
+        right_speed = speed
         
-        self.stop()
+        right_speed *= right_turn_rate
+        left_speed *= left_turn_rate
+
+        self.right_motor.run_angle(-speed,right_deg,then=Stop.HOLD,wait=True)
+        self.left_motor.run_angle(speed,left_deg,then=Stop.HOLD,wait=True)
             
 
     def shift(self,x,y,speed):
@@ -136,32 +154,32 @@ class DriveController:
         a = 0.5 * sqrt(y*y + x*x)
         beta = sinh(abs(y)/(2*a))
         alpha = (3.141)-2*beta
-        factor = alpha/(2*3.141)
+        factor = (alpha/(2*3.141))
         b = (a/2)/cos(beta)
     
         r_main = b
         r_big= r_main + 0.5*self.WHEEL_BASE_WIDTH
         r_small = r_main - 0.5*self.WHEEL_BASE_WIDTH
-        motor_angle_big = (((3.141*r_big*2)*factor)/(self.WHEEL_DIAMETER*3.141))*360
+        motor_angle_big = (((3.141*r_big*2)*(factor))/(self.WHEEL_DIAMETER*3.141))*360
         motor_angle_small = (((3.141*r_small*2)*factor)/(self.WHEEL_DIAMETER*3.141))*360
         turn_rate = (motor_angle_small/motor_angle_big)
 
         if x>0 and y>0:
-            self.curve(speed,turn_rate,1,motor_angle_small)
-            self.curve(speed,1,turn_rate,motor_angle_big)
+            self.curve_shift(speed,turn_rate,1,motor_angle_small,motor_angle_big)
+            self.curve_shift(speed,1,turn_rate,motor_angle_big,motor_angle_small)
         elif x<0 and y<0:
-            self.curve(-speed,1,turn_rate,motor_angle_big)
-            self.curve(-speed,turn_rate,1,motor_angle_small)
+            self.curve_shift(-speed,1,turn_rate,motor_angle_big,motor_angle_small)
+            self.curve_shift(-speed,turn_rate,1,motor_angle_small,motor_angle_big)
         elif x>0 and y<0:
-            self.curve(-speed,turn_rate,1,motor_angle_small)
-            self.curve(-speed,1,turn_rate,motor_angle_big)
+            self.curve_shift(-speed,turn_rate,1,motor_angle_small,motor_angle_big)
+            self.curve_shift(-speed,1,turn_rate,motor_angle_big,motor_angle_small)
         elif x<0 and y>0:
-            self.curve(speed,1,turn_rate,motor_angle_big)
-            self.curve(speed,turn_rate,1,motor_angle_small)
+            self.curve_shift(speed,1,turn_rate,motor_angle_big,motor_angle_small)
+            self.curve_shift(speed,turn_rate,1,motor_angle_small,motor_angle_big)
 
 
 
     
     # constants
-    WHEEL_DIAMETER = 58  # in millimeters
+    WHEEL_DIAMETER = 62  # in millimeters
     WHEEL_BASE_WIDTH = 161.5 #161

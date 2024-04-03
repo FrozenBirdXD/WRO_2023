@@ -31,7 +31,7 @@ height_motor = Motor(Port.C)
 # Limits
 left_motor.control.limits(1500, 2500, 100)
 right_motor.control.limits(1500, 2500, 100)
-graber_motor.control.limits(1500, 1500, 100)
+graber_motor.control.limits(1500, 4000, 100)
 height_motor.control.limits(1500, 1500, 100)
 
 # Sensors
@@ -142,17 +142,10 @@ def picup_r_y():
     graber.height_carry()
 
 def picup_r_y_2():
-    #straighten
-    mnr.drive_distance(600,-90)
-    mnr.drive_distance(600,80)
-    wait(100)
-    #drive to first block
-    mnr.drive_distance(700, 190)
-    mnr.turn(300, 90)
-    mnr.drive_distance(700, 240)
-    mnr.turn(300, 90)
-    # mnr.straighten("front")
-    mnr.drive_distance(700, 120)
+    #go to first block
+    mnr.drive_distance(800,-90)
+    mnr.drive_distance(1000,120)
+    mnr.u_trun(600,240,0.5)
 
     #grab first block
     graber.graber_ready()
@@ -160,13 +153,9 @@ def picup_r_y_2():
     graber.graber_close()
     graber.height_carry()
 
-    #drive to second block
-    mnr.drive_distance(700, -70)
-    mnr.turn(250, -90)
-    mnr.drive_distance(700, 95)
-    mnr.turn(250, 90)
-    # mnr.straighten("front")
-    mnr.drive_distance(700, 75)
+    #shift to next block
+    mnr.shift(-105,-150,1500)
+    mnr.drive_distance(1500, 150)
 
     #grab second block
     graber.height_2()
@@ -180,20 +169,13 @@ def picup_r_y_2():
     mnr.turn(200, 20)
     right_motor.run_angle(speed=200, rotation_angle=20, then=Stop.HOLD, wait=False)
     mnr.drive_distance(300, 110)
-
-    #drive to thrid block
     graber.height_carry()
-    mnr.drive_distance(700, -165)
+    mnr.drive_distance(700, -110)
     mnr.turn(200, -20)
 
-    wait(100)
 
-    mnr.turn(200, -90)
-    mnr.drive_distance(700, 80)
-    mnr.turn(200, 91)
-
-    # mnr.straighten("back")
-    mnr.drive_distance(700, 60)
+    mnr.shift(-105,-150,1500)
+    mnr.drive_distance(1500, 150)
 
     #grab third block
     graber.graber_ready()
@@ -202,12 +184,8 @@ def picup_r_y_2():
     graber.height_carry()
 
     #drive to fourth block
-    mnr.drive_distance(700, -70)
-    mnr.turn(200, -90)
-    mnr.drive_distance(700, 90)
-    mnr.turn(200, 91)
-    # mnr.straighten("back")
-    mnr.drive_distance(700, 75)
+    mnr.shift(-105,-150,1500)
+    mnr.drive_distance(1500, 150)
 
     #grab fourth block
     graber.height_2()
@@ -220,21 +198,18 @@ def picup_r_y_2():
 
 def put_back_1():
     #--------------------------------------new straighten with border
-    mnr.turn(200, 90)
-    mnr.drive_distance(600, 70)
-    mnr.turn(200, 90)
-    mnr.drive_distance(600, -160)
-    #--------------------------------------new 
+    mnr.u_trun(-800,200,0.5)
+    mnr.drive_distance(500, -210)
 
-    mnr.drive_distance(800, 490)
-    mnr.turn(200, -90)
-    mnr.drive_distance(800, 220) 
+    #--------------------------------------new 
+    mnr.drive_distance(1500,300)
+    mnr.u_trun(1500,-300,0.25)
     graber.height_up()
-    mnr.drive_distance(700, -280)
+    mnr.drive_distance(1500, -270)
     graber.height_1()
     graber.graber_open()
     graber.height_carry()
-    mnr.drive_distance(700, -95)
+    mnr.drive_distance(1500, -95)
 
     graber.height_up_aggressive()
 
@@ -260,9 +235,9 @@ def put_back_2():
 if __name__ == "__main__":
     picup_r_y_2() 
     put_back_1()
-    rth()
-    picup_r_y_2()
-    put_back_2()
+    # rth()
+    # picup_r_y_2()
+    # put_back_2()
 
     
     

@@ -10,34 +10,34 @@ class Graber:
         self.graber_motor.reset_angle(0)
 
     def graber_close(self):
-        self.graber_motor.run_target(800, self.CLOSE_GRABER, then=Stop.HOLD, wait=True)
+        self.graber_motor.run_target(1500, self.CLOSE_GRABER, then=Stop.HOLD, wait=True)
 
     def graber_open(self):
-        self.graber_motor.run_target(800, self.OPEN_GRABER, then=Stop.HOLD, wait=True)
+        self.graber_motor.run_target(1500, self.OPEN_GRABER, then=Stop.HOLD, wait=True)
 
     def graber_open_full(self):
-        self.graber_motor.run_target(800, self.OPEN_GRABER_FULL, then=Stop.HOLD, wait=True)
+        self.graber_motor.run_target(1500, self.OPEN_GRABER_FULL, then=Stop.HOLD, wait=True)
 
     def graber_ready(self):
-        self.graber_motor.run_target(800, self.READY_GRABER, then=Stop.HOLD, wait=True)
+        self.graber_motor.run_target(1500, self.READY_GRABER, then=Stop.HOLD, wait=True)
 
     def height_1(self):
-        self.height_motor.run_target(800, self.HEIGHT_1, then=Stop.HOLD, wait=True)
+        self.height_motor.run_target(1500, self.HEIGHT_1, then=Stop.HOLD, wait=True)
 
     def height_up(self):
-        self.height_motor.run_target(400, self.HEIGHT_UP, then=Stop.HOLD, wait=True) 
+        self.height_motor.run_target(1500, self.HEIGHT_UP, then=Stop.HOLD, wait=True) 
 
     def height_up_aggressive(self):
-        self.height_motor.run_target(1000, self.HEIGHT_UP, then=Stop.HOLD, wait=True) 
+        self.height_motor.run_target(1500, self.HEIGHT_UP, then=Stop.HOLD, wait=True) 
 
     def height_4(self):
-        self.height_motor.run_target(800, self.HEIGHT_4, then=Stop.HOLD, wait=True)
+        self.height_motor.run_target(1500, self.HEIGHT_4, then=Stop.HOLD, wait=True)
 
     def height_2(self):
-        self.height_motor.run_target(800, self.HEIGHT_2, then=Stop.HOLD, wait=True)
+        self.height_motor.run_target(1500, self.HEIGHT_2, then=Stop.HOLD, wait=True)
 
     def height_carry(self):
-        self.height_motor.run_target(800, self.HEIGHT_CARRY, then=Stop.HOLD, wait=True)
+        self.height_motor.run_target(1500, self.HEIGHT_CARRY, then=Stop.HOLD, wait=True)
     
     def height_complete_breakdown(self):
         self.height_motor.run_target(800, -900, then=Stop.HOLD, wait=True)
