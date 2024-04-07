@@ -143,9 +143,8 @@ def picup_r_y():
 
 def picup_r_y_2():
     #go to first block
-    mnr.drive_distance(800,-90)
-    mnr.drive_distance(1000,120)
-    mnr.u_trun(600,240,0.5)
+    mnr.drive_distance(500,40)
+    mnr.u_trun(600,235,0.5)
 
     #grab first block
     graber.graber_ready()
@@ -154,8 +153,8 @@ def picup_r_y_2():
     graber.height_carry()
 
     #shift to next block
-    mnr.shift(-105,-150,1500)
-    mnr.drive_distance(1500, 150)
+    mnr.shift(-90,-150,1200)
+    mnr.drive_distance(1000, 155)
 
     #grab second block
     graber.height_2()
@@ -174,8 +173,8 @@ def picup_r_y_2():
     mnr.turn(200, -20)
 
 
-    mnr.shift(-105,-150,1500)
-    mnr.drive_distance(1500, 150)
+    mnr.shift(-95,-150,1200)
+    mnr.drive_distance(1000,155)
 
     #grab third block
     graber.graber_ready()
@@ -184,8 +183,8 @@ def picup_r_y_2():
     graber.height_carry()
 
     #drive to fourth block
-    mnr.shift(-105,-150,1500)
-    mnr.drive_distance(1500, 150)
+    mnr.shift(-90,-150,1200)
+    mnr.drive_distance(1000, 155)
 
     #grab fourth block
     graber.height_2()
@@ -198,34 +197,44 @@ def picup_r_y_2():
 
 def put_back_1():
     #--------------------------------------new straighten with border
-    mnr.u_trun(-800,200,0.5)
-    mnr.drive_distance(500, -210)
+    # mnr.u_trun(-800,200,0.5)
+    # mnr.drive_distance(700, -183)
+    mnr.turn(500,180)
+    mnr.drive_distance(700,-180)
+    # mnr.turn_after(-20,0,"left")
+    # mnr.turn_after(-180,-200,"left")
 
-    #--------------------------------------new 
-    mnr.drive_distance(1000,340)
-    mnr.u_trun(600,-280,0.25)
+    #--------------------------------------new
+    mnr.turn_after(200,415,"left")
+
+    # mnr.turn_after(20,415,"left")
     graber.height_up()
-    mnr.drive_distance(1000, -295)
+    mnr.drive_distance(1000, -60)
+    mnr.shift(-1,-260,1200)
     graber.height_1()
     graber.graber_open()
     graber.height_up_aggressive()
 
 def rth():
-    mnr.drive_distance(1000,-220)
-    mnr.u_trun(-600, 300, 0.25)
-    mnr.drive_distance(1000, -130)
+    mnr.drive_until(-300, Color.BLACK)
+    # mnr.drive_distance(1000, -170)
+    # mnr.u_trun(-600, 320, 0.25)
+    mnr.turn_after(-300,-500,"left")
+    mnr.drive_distance(700, -310)
+    mnr.drive_distance(500,80)
 
 def put_back_2():
-    mnr.drive_distance(250, -160)
-    mnr.drive_distance(250, 100)
-    mnr.turn(300, 90)
-    mnr.drive_distance(250, 20)
-    mnr.turn(300, 90)
-    mnr.drive_distance(250, 90)
+    mnr.drive_distance(250,55)
+    mnr.turn(300, 180)
+    while right_color_sensor.color() is not Color.YELLOW:
+        mnr.line_tracer("left", "idontcare")
+    mnr.stop()
+    
+    mnr.drive_distance(250, -20)
 
     graber.height_4()
     graber.graber_ready()
-    graber.height_up()
+    graber.height_carry()
 
     mnr.drive_distance(250, -100)
     
@@ -235,6 +244,7 @@ if __name__ == "__main__":
     rth()
     picup_r_y_2()
     put_back_2()
+   
 
     
     

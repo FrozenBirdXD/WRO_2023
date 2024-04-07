@@ -53,8 +53,8 @@ class Graber:
     READY_GRABER = -460 #-490
     OPEN_GRABER = -250 
     CLOSE_GRABER = -590 
-    HEIGHT_UP = 10 
-    HEIGHT_1 = -780 #-753
+    HEIGHT_UP = 0 
+    HEIGHT_1 = -783 #-753
     HEIGHT_2 = -710 #-683
     HEIGHT_4 = -603
     HEIGHT_CARRY = -450
