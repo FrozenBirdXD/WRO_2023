@@ -73,15 +73,16 @@ class DriveController:
 
         last_error = error
     
-     def line_tracer_distance(self, side: str, direction:str, distance):
+    def line_tracer_distance(self, side: str, direction:str, distance):
         if (direction == "back"):
             speed = -300
         else:
             speed = 300
         self.left_motor.reset_angle(0)
         self.right_motor.reset_angle(0)
-        wheel_travel = (((distance / 2)/ 3.141)/self.WHEEL_DIAMETER)*360
-        while abs(self.right_motor.angle()) < abs(wheel_travel):
+        circumference = self.WHEEL_DIAMETER * 3.14
+        angle_degrees = (distance / circumference) * 360
+        while abs(self.right_motor.angle()) < abs(angle_degrees):
             last_error = 0
 
             target = TARGET_REFLECTION
@@ -105,6 +106,7 @@ class DriveController:
             self.drive(speed, correction * multiplier)
 
             last_error = error
+        self.stop()
 
     
     def straighten(self, direction:str):
@@ -166,8 +168,12 @@ class DriveController:
         right_speed *= right_turn_rate
         left_speed *= left_turn_rate
 
-        self.left_motor.run_angle(left_speed,left_deg,then=Stop.HOLD,wait=False)
-        self.right_motor.run_angle(-right_speed,right_deg,then=Stop.HOLD,wait=True)
+        if right_deg > left_deg:
+            self.left_motor.run_angle(left_speed,left_deg,then=Stop.HOLD,wait=False)
+            self.right_motor.run_angle(-right_speed,right_deg,then=Stop.HOLD,wait=True)
+        else:
+            self.right_motor.run_angle(-right_speed,right_deg,then=Stop.HOLD,wait=False)
+            self.left_motor.run_angle(left_speed,left_deg,then=Stop.HOLD,wait=True)
 
 
     def __curve_shift(self,speed, right_turn_rate,left_turn_rate, right_deg, left_deg):
@@ -215,10 +221,16 @@ class DriveController:
 
     def turn_after(self,x,y,direction,speed=1000):
         self.drive_distance(speed,y)
-        if direction == "left":
-            self.u_trun(speed-200,-200,0.25)
-        else:
-            self.u_trun(speed-200,200,0.25)
+        if y > 0:
+            if direction == "left":
+                self.u_trun(speed-400,-200,0.25)
+            else:
+                self.u_trun(speed-400,200,0.25)
+        elif y < 0:
+            if direction == "left":
+                self.u_trun(-speed+400,200,0.25)
+            else:
+                self.u_trun(-speed+400,-200,0.25)
         self.drive_distance(speed,x)
 
 

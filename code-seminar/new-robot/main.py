@@ -29,8 +29,8 @@ right_motor = Motor(Port.B, positive_direction = Direction.COUNTERCLOCKWISE)
 graber_motor = Motor(Port.D)
 height_motor = Motor(Port.C)
 # Limits
-left_motor.control.limits(1500, 2500, 100)
-right_motor.control.limits(1500, 2500, 100)
+left_motor.control.limits(1500, 2200, 100)
+right_motor.control.limits(1500, 2200, 100)
 graber_motor.control.limits(1500, 4000, 100)
 height_motor.control.limits(1500, 1500, 100)
 
@@ -107,7 +107,7 @@ def picup_r_y():
     graber.height_carry()
 
     #drive to fourth block
-    mnr.shift(-100,-130,1200)
+    mnr.shift(-95,-130,1200)
     mnr.drive_distance(1000, 130)
 
     #grab fourth block
@@ -124,7 +124,7 @@ def put_back_1():
     mnr.turn(500,180)
     mnr.drive_distance(700,-175)
     #--------------------------------------new
-    mnr.turn_after(200,430,"left")
+    mnr.turn_after(210,430,"left")
     graber.height_up()
     mnr.drive_distance(1000, -60)
     mnr.shift(-10,-260,1200)
@@ -133,20 +133,34 @@ def put_back_1():
     graber.height_up_aggressive()
 
 def rth():
-    mnr.drive_until(-300, Color.BLACK)
-    mnr.turn_after(-300,-480,"left")
-    mnr.drive_distance(700, -310)
+    mnr.turn_after(-150,-310,"left")
+    mnr.drive_distance(800, -225)
     mnr.drive_distance(500,100)
 
 def put_back_2():
-    mnr.drive_distance(250,55)
+    mnr.drive_distance(250,60)
     mnr.turn(300, 180)
-    while right_color_sensor.color() is not Color.YELLOW:
-        mnr.line_tracer("left", "idontcare")
-    mnr.stop()
-    
-    mnr.drive_distance(250, -20)
+    mnr.line_tracer_distance("left","front",200)
+    mnr.drive_distance(300,45)
+    graber.height_4()
+    graber.graber_ready()
+    graber.height_carry()
 
+    mnr.drive_distance(250, -100)
+
+def put_back_3():
+    mnr.turn(300,90)
+    graber.height_up()
+    mnr.drive_distance(1000, -80)
+    mnr.shift(-50,-70,1200)
+    mnr.drive_distance(1000,40)
+    graber.height_1()
+    graber.graber_close()
+    graber.height_carry()
+    mnr.drive_distance(1000,300)
+    mnr.turn(300,-90)
+    mnr.drive_until(300,Color.BLACK)
+    mnr.drive_distance(-300,20)
     graber.height_4()
     graber.graber_ready()
     graber.height_carry()
@@ -159,7 +173,7 @@ if __name__ == "__main__":
     rth()
     picup_r_y()
     put_back_2()
-   
+    put_back_3()
 
     
     
