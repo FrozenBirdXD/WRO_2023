@@ -64,84 +64,8 @@ def open_pipe():
     wait(400)
     mnr.stop()
 
+
 def picup_r_y():
-    #straighten
-    mnr.drive_distance(300,-90)
-    mnr.drive_distance(200,80)
-    wait(100)
-    #drive to first block
-    mnr.drive_distance(400, 190)
-    mnr.turn(300, 90)
-    mnr.drive_distance(400, 240)
-    mnr.turn(300, 90)
-    # mnr.straighten("front")
-    mnr.drive_distance(400, 120)
-
-    #grab first block
-    graber.graber_ready()
-    graber.height_1()
-    graber.graber_close()
-    graber.height_carry()
-
-    #drive to second block
-    mnr.drive_distance(300, -70)
-    mnr.turn(250, -90)
-    mnr.drive_distance(300, 95)
-    mnr.turn(250, 90)
-    # mnr.straighten("front")
-    mnr.drive_distance(300, 75)
-
-    #grab second block
-    graber.height_2()
-    graber.graber_ready()
-    graber.height_1()
-    graber.graber_close()
-    
-    #grab first stack of blocks
-    graber.graber_ready()
-    graber.height_up_aggressive()
-    mnr.turn(200, 20)
-    right_motor.run_angle(speed=200, rotation_angle=20, then=Stop.HOLD, wait=False)
-    mnr.drive_distance(200, 110)
-
-    #drive to thrid block
-    graber.height_carry()
-    mnr.drive_distance(300, -165)
-    mnr.turn(200, -20)
-
-    wait(100)
-
-    mnr.turn(200, -90)
-    mnr.drive_distance(300, 80)
-    mnr.turn(200, 91)
-
-    # mnr.straighten("back")
-    mnr.drive_distance(300, 60)
-
-    #grab third block
-    graber.graber_ready()
-    graber.height_1()
-    graber.graber_close()
-    graber.height_carry()
-
-    #drive to fourth block
-    mnr.drive_distance(300, -70)
-    mnr.turn(200, -90)
-    mnr.drive_distance(300, 90)
-    mnr.turn(200, 91)
-    # mnr.straighten("back")
-    mnr.drive_distance(300, 75)
-
-    #grab fourth block
-    graber.height_2()
-    graber.graber_ready()
-    graber.height_1()
-    graber.graber_close()
-
-    #put blocks on color
-    graber.height_carry()
-
-def picup_r_y_2():
     #go to first block
     mnr.drive_distance(500,40)
     mnr.u_trun(600,235,0.5)
@@ -153,8 +77,8 @@ def picup_r_y_2():
     graber.height_carry()
 
     #shift to next block
-    mnr.shift(-90,-150,1200)
-    mnr.drive_distance(1000, 155)
+    mnr.shift(-100,-130,1200)
+    mnr.drive_distance(1000, 130)
 
     #grab second block
     graber.height_2()
@@ -173,8 +97,8 @@ def picup_r_y_2():
     mnr.turn(200, -20)
 
 
-    mnr.shift(-95,-150,1200)
-    mnr.drive_distance(1000,155)
+    mnr.shift(-95,-130,1200)
+    mnr.drive_distance(1000,130)
 
     #grab third block
     graber.graber_ready()
@@ -183,8 +107,8 @@ def picup_r_y_2():
     graber.height_carry()
 
     #drive to fourth block
-    mnr.shift(-90,-150,1200)
-    mnr.drive_distance(1000, 155)
+    mnr.shift(-100,-130,1200)
+    mnr.drive_distance(1000, 130)
 
     #grab fourth block
     graber.height_2()
@@ -197,31 +121,22 @@ def picup_r_y_2():
 
 def put_back_1():
     #--------------------------------------new straighten with border
-    # mnr.u_trun(-800,200,0.5)
-    # mnr.drive_distance(700, -183)
     mnr.turn(500,180)
-    mnr.drive_distance(700,-180)
-    # mnr.turn_after(-20,0,"left")
-    # mnr.turn_after(-180,-200,"left")
-
+    mnr.drive_distance(700,-175)
     #--------------------------------------new
-    mnr.turn_after(200,415,"left")
-
-    # mnr.turn_after(20,415,"left")
+    mnr.turn_after(200,430,"left")
     graber.height_up()
     mnr.drive_distance(1000, -60)
-    mnr.shift(-1,-260,1200)
+    mnr.shift(-10,-260,1200)
     graber.height_1()
     graber.graber_open()
     graber.height_up_aggressive()
 
 def rth():
     mnr.drive_until(-300, Color.BLACK)
-    # mnr.drive_distance(1000, -170)
-    # mnr.u_trun(-600, 320, 0.25)
-    mnr.turn_after(-300,-500,"left")
+    mnr.turn_after(-300,-480,"left")
     mnr.drive_distance(700, -310)
-    mnr.drive_distance(500,80)
+    mnr.drive_distance(500,100)
 
 def put_back_2():
     mnr.drive_distance(250,55)
@@ -239,10 +154,10 @@ def put_back_2():
     mnr.drive_distance(250, -100)
     
 if __name__ == "__main__":
-    picup_r_y_2() 
+    picup_r_y() 
     put_back_1()
     rth()
-    picup_r_y_2()
+    picup_r_y()
     put_back_2()
    
 

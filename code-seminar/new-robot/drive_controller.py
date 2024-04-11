@@ -72,6 +72,39 @@ class DriveController:
         self.drive(speed, correction * multiplier)
 
         last_error = error
+    
+     def line_tracer_distance(self, side: str, direction:str, distance):
+        if (direction == "back"):
+            speed = -300
+        else:
+            speed = 300
+        self.left_motor.reset_angle(0)
+        self.right_motor.reset_angle(0)
+        wheel_travel = (((distance / 2)/ 3.141)/self.WHEEL_DIAMETER)*360
+        while abs(self.right_motor.angle()) < abs(wheel_travel):
+            last_error = 0
+
+            target = TARGET_REFLECTION
+            integral = 0
+
+            if side == "right":
+                value = self.right_color_sensor.reflection()
+                multiplier = 1
+            elif side == "left":
+                value = self.left_color_sensor.reflection()
+                multiplier = -1
+            else:
+                raise ValueError("Invalid side")
+
+            error = target - value
+            integral += error
+            derative = error - last_error
+
+            correction = (error * Kp) + (integral * Ki) + (derative * Kd)
+
+            self.drive(speed, correction * multiplier)
+
+            last_error = error
 
     
     def straighten(self, direction:str):
@@ -115,16 +148,16 @@ class DriveController:
 
     def u_trun(self,speed,x,factor):
         r_main = abs(x)/2
-        r_big= r_main + 0.5*self.WHEEL_BASE_WIDTH
+        r_big = r_main + 0.5*self.WHEEL_BASE_WIDTH
         r_small = r_main - 0.5*self.WHEEL_BASE_WIDTH
         motor_angle_big = ((3.141*r_big*2*factor)/(self.WHEEL_DIAMETER*3.141))*402
         motor_angle_small = (((3.141*r_small*2*factor))/(self.WHEEL_DIAMETER*3.141))*402
         turn_rate = (motor_angle_small/motor_angle_big)
         if x>0:
-            self.__curve_u_turn(speed,turn_rate,1,motor_angle_small,motor_angle_big)
+            self.__curve_u_turn(speed,abs(turn_rate),1,motor_angle_small,motor_angle_big)
         elif x<0:
-            self.__curve_u_turn(speed,1,turn_rate,motor_angle_big,motor_angle_small)
-
+            self.__curve_u_turn(speed,1,abs(turn_rate),motor_angle_big,motor_angle_small)
+        
 
     def __curve_u_turn(self,speed, right_turn_rate,left_turn_rate, right_deg, left_deg):
         left_speed = speed
@@ -167,17 +200,17 @@ class DriveController:
         turn_rate = (motor_angle_small/motor_angle_big)
 
         if x>0 and y>0:
-            self.__curve_shift(speed,turn_rate,1,motor_angle_small,motor_angle_big)
-            self.__curve_shift(speed,1,turn_rate,motor_angle_big,motor_angle_small)
+            self.__curve_shift(speed,abs(turn_rate),1,motor_angle_small,motor_angle_big)
+            self.__curve_shift(speed,1,abs(turn_rate),motor_angle_big,motor_angle_small)
         elif x<0 and y<0:
-            self.__curve_shift(-speed,1,turn_rate,motor_angle_big,motor_angle_small)
-            self.__curve_shift(-speed,turn_rate,1,motor_angle_small,motor_angle_big)
+            self.__curve_shift(-speed,1,abs(turn_rate),motor_angle_big,motor_angle_small)
+            self.__curve_shift(-speed,abs(turn_rate),1,motor_angle_small,motor_angle_big)
         elif x>0 and y<0:
-            self.__curve_shift(-speed,turn_rate,1,motor_angle_small,motor_angle_big)
-            self.__curve_shift(-speed,1,turn_rate,motor_angle_big,motor_angle_small)
+            self.__curve_shift(-speed,abs(turn_rate),1,motor_angle_small,motor_angle_big)
+            self.__curve_shift(-speed,1,abs(turn_rate),motor_angle_big,motor_angle_small)
         elif x<0 and y>0:
-            self.__curve_shift(speed,1,turn_rate,motor_angle_big,motor_angle_small)
-            self.__curve_shift(speed,turn_rate,1,motor_angle_small,motor_angle_big)
+            self.__curve_shift(speed,1,abs(turn_rate),motor_angle_big,motor_angle_small)
+            self.__curve_shift(speed,abs(turn_rate),1,motor_angle_small,motor_angle_big)
 
 
     def turn_after(self,x,y,direction,speed=1000):
