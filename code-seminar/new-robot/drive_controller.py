@@ -9,7 +9,7 @@ from pybricks.ev3devices import (
 )
 
 # Constants
-Kp = 10  # can be larger
+Kp = 20  # can be larger
 Ki = 0.0000  # small
 Kd = 0.0  # small
 TARGET_REFLECTION = 27
@@ -45,9 +45,9 @@ class DriveController:
 
     def line_tracer(self, side: str, direction:str):
         if (direction == "back"):
-            speed = -300
+            speed = -200
         else:
-            speed = 300
+            speed = 200
 
         last_error = 0
 
@@ -73,11 +73,7 @@ class DriveController:
 
         last_error = error
     
-    def line_tracer_distance(self, side: str, direction:str, distance):
-        if (direction == "back"):
-            speed = -300
-        else:
-            speed = 300
+    def line_tracer_distance(self, side: str, distance ,speed = 200):
         self.left_motor.reset_angle(0)
         self.right_motor.reset_angle(0)
         circumference = self.WHEEL_DIAMETER * 3.14

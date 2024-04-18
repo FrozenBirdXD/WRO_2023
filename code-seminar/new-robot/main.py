@@ -64,11 +64,11 @@ def open_pipe():
     wait(400)
     mnr.stop()
 
-
-def picup_r_y():
-    #go to first block
+def start():
     mnr.drive_distance(500,40)
     mnr.u_trun(600,235,0.5)
+
+def picup_r_y():
 
     #grab first block
     graber.graber_ready()
@@ -124,10 +124,11 @@ def put_back_1():
     mnr.turn(500,180)
     mnr.drive_distance(700,-175)
     #--------------------------------------new
-    mnr.turn_after(210,430,"left")
+    mnr.turn_after(210,435,"left")
     graber.height_up()
     mnr.drive_distance(1000, -60)
-    mnr.shift(-10,-260,1200)
+    mnr.shift(-1,-265,1200)
+    # mnr.drive_distance(400,-300)
     graber.height_1()
     graber.graber_open()
     graber.height_up_aggressive()
@@ -137,11 +138,18 @@ def rth():
     mnr.drive_distance(800, -225)
     mnr.drive_distance(500,100)
 
+def rth2():
+    mnr.shift(300,-350,1200)
+    mnr.line_tracer_distance("right",215)
+    wait(200)
+    mnr.turn(300,90)
+    mnr.drive_distance(300,40)
+
 def put_back_2():
     mnr.drive_distance(250,60)
     mnr.turn(300, 180)
-    mnr.line_tracer_distance("left","front",200)
-    mnr.drive_distance(300,45)
+    mnr.line_tracer_distance("left","front",180)
+    mnr.drive_distance(300,20)
     graber.height_4()
     graber.graber_ready()
     graber.height_carry()
@@ -159,8 +167,7 @@ def put_back_3():
     graber.height_carry()
     mnr.drive_distance(1000,300)
     mnr.turn(300,-90)
-    mnr.drive_until(300,Color.BLACK)
-    mnr.drive_distance(-300,20)
+    mnr.drive_distance(300,110)
     graber.height_4()
     graber.graber_ready()
     graber.height_carry()
@@ -168,12 +175,14 @@ def put_back_3():
     mnr.drive_distance(250, -100)
     
 if __name__ == "__main__":
+    start()
     picup_r_y() 
     put_back_1()
-    rth()
+    rth2()
     picup_r_y()
     put_back_2()
     put_back_3()
+
 
     
     
