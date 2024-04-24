@@ -139,22 +139,22 @@ def rth():
     mnr.drive_distance(500,100)
 
 def rth2():
-    mnr.shift(300,-350,1200)
+    mnr.shift(290,-345,1200)
     mnr.line_tracer_distance("right",215)
     wait(200)
-    mnr.turn(300,90)
+    mnr.turn(300,91)
     mnr.drive_distance(300,40)
 
 def put_back_2():
     mnr.drive_distance(250,60)
     mnr.turn(300, 180)
-    mnr.line_tracer_distance("left","front",180)
+    mnr.line_tracer_distance("left",190)
     mnr.drive_distance(300,20)
     graber.height_4()
     graber.graber_ready()
     graber.height_carry()
 
-    mnr.drive_distance(250, -100)
+    mnr.drive_distance(250, -110)
 
 def put_back_3():
     mnr.turn(300,90)
@@ -168,6 +168,7 @@ def put_back_3():
     mnr.drive_distance(1000,300)
     mnr.turn(300,-90)
     mnr.drive_distance(300,110)
+    mnr.drive_distance(300,-55)
     graber.height_4()
     graber.graber_ready()
     graber.height_carry()
