@@ -125,7 +125,7 @@ def place_red_yellow():
     mnr.drive_distance(700, -175)
 
     # put back red
-    mnr.turn_after(210, 435, "left")
+    mnr.turn_after(210, 490, "left")
     graber.height_up()
     mnr.drive_distance(1000, -60)
 
@@ -138,12 +138,12 @@ def place_red_yellow():
 
 def rth():
     # drive to line
-    mnr.shift(290, -345, 1200)
-    mnr.line_tracer_distance("right", 215)
+    mnr.shift(220, -345, 1200)
+    mnr.line_tracer_distance("right", 205)
     wait(200)
     # drive to first block - red
     mnr.turn(300, 91)
-    mnr.drive_distance(300, 30)
+    mnr.drive_distance(300, 15)
 
 
 def stack_yellow():
