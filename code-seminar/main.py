@@ -54,14 +54,7 @@ graber = Graber(height_motor, graber_motor)
 
 # ----------------------------------------------------------------------------------------------
 
-def open_pipe():
-    graber.graber_open_for_pipe_because_just_because()
-    graber.height_complete_breakdown()
-    graber.graber_open()
-    mnr.drive(250, 400)
-    graber.yalla()
-    wait(400)
-    mnr.stop()
+
 
 
 def start():
@@ -122,15 +115,15 @@ def get_red_yellow():
 def place_red_yellow():
     # straighten with border
     mnr.turn(500, 180)
-    mnr.drive_distance(700, -175)
+    mnr.drive_distance(700, -165)
 
     # put back red
-    mnr.turn_after(210, 490, "left")
+    mnr.turn_after(210, 475, "left")
     graber.height_up()
     mnr.drive_distance(1000, -60)
 
     # put back yellow
-    mnr.shift(-1, -265, 1200)
+    mnr.shift(-1, -270, 1200)
     graber.height_1()
     graber.graber_open()
     graber.height_up_aggressive()
@@ -138,8 +131,8 @@ def place_red_yellow():
 
 def rth():
     # drive to line
-    mnr.shift(220, -345, 1200)
-    mnr.line_tracer_distance("right", 205)
+    mnr.shift(235, -340, 1200)
+    mnr.line_tracer_distance("right", 210)
     wait(200)
     # drive to first block - red
     mnr.turn(300, 91)
@@ -153,7 +146,8 @@ def stack_yellow():
 
     # drive to stack
     mnr.line_tracer_distance("left", 190)
-    mnr.drive_distance(300, 20)
+    mnr.drive_distance(300, 55)
+    mnr.drive_distance(300, -55)
     graber.height_4()
     graber.graber_ready()
     graber.height_carry()
@@ -166,7 +160,7 @@ def stack_red():
     mnr.turn(300, 90)
     graber.height_up()
     mnr.drive_distance(1000, -90)
-    mnr.shift(-50, -70, 1200)
+    mnr.shift(-60, -70, 1200)
     mnr.drive_distance(1000, 50)
     # pick up blocks with graber
     graber.height_1()
@@ -175,15 +169,35 @@ def stack_red():
     # drive until stack
     mnr.drive_distance(1000, 300)
     mnr.turn(300, -90)
-    mnr.drive_distance(300, 110)
+    mnr.drive_distance(300, 120)
     mnr.drive_distance(300, -55)
     # put blocks on stack
     graber.height_4()
     graber.graber_ready()
-    graber.height_carry()
+    graber.height_up()
 
     mnr.drive_distance(250, -100)
 
+def trash():
+    #brings away trash 1 and 2
+    mnr.shift(200,-110,1200)
+    mnr.drive_distance(1500,330)
+    mnr.u_turn(1200,500,0.25)
+    graber.graber_open_for_pipe_because_just_because()
+    graber.height_complete_breakdown()
+    mnr.drive_distance(1500,300)
+    #pipe 1
+    graber.height_4()
+    mnr.turn(300,30)
+    mnr.drive_distance(1200,-200)
+    graber.height_up()
+    #move trash 3 and 4
+    mnr.turn(300,-30)
+    mnr.drive_distance(1500,-500)
+    mnr.u_turn(-1200,120,0.5)
+    mnr.line_tracer_distance("right",100)
+    mnr.drive_distance(1200,600)
+    
 
 if __name__ == "__main__":
     start()
@@ -193,3 +207,4 @@ if __name__ == "__main__":
     get_red_yellow()
     stack_yellow()
     stack_red()
+    trash()

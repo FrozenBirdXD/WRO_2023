@@ -42,7 +42,7 @@ class Graber:
         self.height_motor.run_target(1500, self.HEIGHT_CARRY, then=Stop.HOLD, wait=True)
 
     def height_complete_breakdown(self):
-        self.height_motor.run_target(800, -900, then=Stop.HOLD, wait=True)
+        self.height_motor.run_target(800, -890, then=Stop.HOLD, wait=True)
 
     def yalla(self):
         self.height_motor.run_target(1500, -500, then=Stop.HOLD, wait=True)
