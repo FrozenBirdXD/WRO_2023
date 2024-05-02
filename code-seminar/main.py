@@ -114,11 +114,25 @@ def get_red_yellow():
 
 def place_red_yellow():
     # straighten with border
-    mnr.turn(500, 180)
-    mnr.drive_distance(700, -165)
+    # ------------------ old 
+    # mnr.turn(500, 180)
+    # mnr.drive_distance(500, 425)
+    # mnr.turn(500, -86)
+    # mnr.drive_distance(500, 340)
+    # -------------------
+    # ---------------- old old
+    # mnr.drive_distance(700, -160)
 
     # put back red
-    mnr.turn_after(210, 475, "left")
+    # mnr.turn_after(220, 475, "left")
+    # -----------------
+
+    mnr.u_turn(500, 200, 0.5)
+    mnr.line_tracer_distance("right", 100, 250)
+    mnr.drive_distance(250, 325)
+    mnr.turn(400, -90)
+    mnr.drive_distance(500, 110)
+
     graber.height_up()
     mnr.drive_distance(1000, -60)
 
@@ -131,8 +145,8 @@ def place_red_yellow():
 
 def rth():
     # drive to line
-    mnr.shift(235, -340, 1200)
-    mnr.line_tracer_distance("right", 210)
+    mnr.shift(270, -335, 1200)
+    mnr.line_tracer_distance("right", 215)
     wait(200)
     # drive to first block - red
     mnr.turn(300, 91)
@@ -146,8 +160,8 @@ def stack_yellow():
 
     # drive to stack
     mnr.line_tracer_distance("left", 190)
-    mnr.drive_distance(300, 55)
-    mnr.drive_distance(300, -55)
+    mnr.drive_distance(300, 50)
+    mnr.drive_distance(300, -60)
     graber.height_4()
     graber.graber_ready()
     graber.height_carry()
@@ -167,9 +181,9 @@ def stack_red():
     graber.graber_close()
     graber.height_carry()
     # drive until stack
-    mnr.drive_distance(1000, 300)
+    mnr.drive_distance(1000, 310)
     mnr.turn(300, -90)
-    mnr.drive_distance(300, 120)
+    mnr.drive_distance(300, 110)
     mnr.drive_distance(300, -55)
     # put blocks on stack
     graber.height_4()
@@ -180,9 +194,9 @@ def stack_red():
 
 def trash():
     #brings away trash 1 and 2
-    mnr.shift(200,-110,1200)
+    mnr.shift(200,-130,1200)
     mnr.drive_distance(1500,330)
-    mnr.u_turn(1200,500,0.25)
+    mnr.u_turn(1200,480,0.25)
     graber.graber_open_for_pipe_because_just_because()
     graber.height_complete_breakdown()
     mnr.drive_distance(1500,300)

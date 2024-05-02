@@ -48,7 +48,7 @@ class Graber:
         self.height_motor.run_target(1500, -500, then=Stop.HOLD, wait=True)
 
     def graber_open_for_pipe_because_just_because(self):
-        self.graber_motor.run_target(800, -300, then=Stop.HOLD, wait=True)
+        self.graber_motor.run_target(800, -290, then=Stop.HOLD, wait=True)
 
     # Constants
     OPEN_GRABER_FULL = 0
