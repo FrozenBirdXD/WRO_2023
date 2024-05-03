@@ -128,8 +128,8 @@ def place_red_yellow():
     # -----------------
 
     mnr.u_turn(500, 200, 0.5)
-    mnr.line_tracer_distance("right", 100, 250)
-    mnr.drive_distance(250, 325)
+    mnr.line_tracer_distance("right", 150, 250)
+    mnr.drive_distance(250, 275)
     mnr.turn(400, -90)
     mnr.drive_distance(500, 110)
 
@@ -137,7 +137,7 @@ def place_red_yellow():
     mnr.drive_distance(1000, -60)
 
     # put back yellow
-    mnr.shift(-1, -270, 1200)
+    mnr.shift(-1, -280, 1200)
     graber.height_1()
     graber.graber_open()
     graber.height_up_aggressive()
@@ -145,8 +145,8 @@ def place_red_yellow():
 
 def rth():
     # drive to line
-    mnr.shift(270, -335, 1200)
-    mnr.line_tracer_distance("right", 215)
+    mnr.shift(280, -325, 1200)
+    mnr.line_tracer_distance("right", 210)
     wait(200)
     # drive to first block - red
     mnr.turn(300, 91)
@@ -194,31 +194,26 @@ def stack_red():
 
 def trash():
     #brings away trash 1 and 2
-    mnr.shift(200,-130,1200)
-    mnr.drive_distance(1500,330)
-    mnr.u_turn(1200,480,0.25)
-    graber.graber_open_for_pipe_because_just_because()
-    graber.height_complete_breakdown()
-    mnr.drive_distance(1500,300)
-    #pipe 1
-    graber.height_4()
-    mnr.turn(300,30)
-    mnr.drive_distance(1200,-200)
-    graber.height_up()
-    #move trash 3 and 4
-    mnr.turn(300,-30)
-    mnr.drive_distance(1500,-500)
-    mnr.u_turn(-1200,120,0.5)
-    mnr.line_tracer_distance("right",100)
-    mnr.drive_distance(1200,600)
+    #---------------------
+    mnr.shift(200,-10,1200)
+    mnr.drive_distance(1500,250)
+    mnr.u_turn(1200,-480,0.25)
+
+    mnr.drive_distance(1500,730)
+    mnr.u_turn(1200,-240,0.25)
+    mnr.drive_distance(1200, 100)
+    mnr.u_turn(1200,240,0.25)
+    mnr.turn(800, 5)
+    mnr.drive_distance(1200, 150)
+    mnr.u_turn(1000,-200,0.5)
     
 
 if __name__ == "__main__":
-    start()
-    get_red_yellow()
-    place_red_yellow()
-    rth()
-    get_red_yellow()
-    stack_yellow()
-    stack_red()
+    # start()
+    # get_red_yellow()
+    # place_red_yellow()
+    # rth()
+    # get_red_yellow()
+    # stack_yellow()
+    # stack_red()
     trash()
