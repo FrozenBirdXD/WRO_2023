@@ -57,7 +57,7 @@ graber = Graber(height_motor, graber_motor)
 
 def start():
     mnr.drive_distance(500, 40)
-    mnr.u_turn(600, 235, 0.5)
+    mnr.u_turn(600, 240, 0.5)
 
 
 def get_red_yellow():
@@ -97,7 +97,7 @@ def get_red_yellow():
     graber.height_carry()
 
     # drive to fourth block
-    mnr.shift(-95, -130, 1200)
+    mnr.shift(-100, -130, 1200)
     mnr.drive_distance(1000, 130)
 
     # grab fourth block
@@ -112,28 +112,24 @@ def get_red_yellow():
 
 def place_red_yellow():
 
-    mnr.turn(800, 185)
-    mnr.line_tracer_distance("right", 180)
+    mnr.turn(800, 175)
+    mnr.line_tracer_distance("right", 100)
     mnr.u_turn(800, 260, 0.25)
     graber.height_up()
     mnr.drive_distance(1000, -60)
 
     # put back yellow
-    mnr.shift(-1, -270, 1200)
+    mnr.shift(-1, -260, 1200)
     graber.height_1()
     graber.graber_open()
     graber.height_up_aggressive()
-    # mnr.drive_distance(800, -20)
-    # mnr.u_turn(-800, -200, 0.25)
-    # mnr.shift(-50, 0, 800)
-    # mnr.line_tracer_distance("right", 50, -200)
 
 
 
 def rth():
-    # drive to line
-    mnr.shift(285, -325, 1200)
-    mnr.line_tracer_distance("right", 220)
+    mnr.u_turn(-500, -240, 0.49)
+    mnr.drive_distance(-900, 520)
+    mnr.line_tracer_distance("right", 200)
     wait(200)
     # drive to first block - red
     mnr.turn(300, 91)
@@ -142,11 +138,12 @@ def rth():
 
 def stack_yellow():
     # stack yellow blocks
-    mnr.drive_distance(250, 60)
-    mnr.turn(300, 180)
-
     # drive to stack
+    mnr.u_turn(800, -200, 0.25)
+    mnr.line_tracer_distance("right", 350)
+    mnr.turn(800, 90)
     mnr.line_tracer_distance("left", 190)
+
     mnr.drive_distance(300, 50)
     mnr.drive_distance(300, -60)
     graber.height_4()
@@ -158,7 +155,7 @@ def stack_yellow():
 
 def stack_red():
     # put down red blocks
-    mnr.turn(300, 90)
+    mnr.turn(300, -90)
     graber.height_up()
     mnr.drive_distance(1000, -90)
     mnr.shift(-60, -70, 1200)
@@ -217,12 +214,14 @@ def trash():
 
 
 if __name__ == "__main__":
-    start()
-    get_red_yellow()
-    place_red_yellow()
-    rth()
+    # start()
+    # get_red_yellow()
+    # place_red_yellow()
+    # rth()
     # get_red_yellow()
     # stack_yellow()
     # stack_red()
-    # trash()
+    # # trash()
+    mnr.shift(100,-200,500)
+    # mnr.shift(-200,-200,1200)
 

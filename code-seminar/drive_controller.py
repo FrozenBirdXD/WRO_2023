@@ -151,10 +151,10 @@ class DriveController:
         r_small = r_main - 0.5 * self.WHEEL_BASE_WIDTH
         motor_angle_big = (
             ((3.141 * r_big * 2) * factor) / (self.WHEEL_DIAMETER * 3.141)
-        ) * 365
+        ) * 360
         motor_angle_small = (
             ((3.141 * r_small * 2) * factor) / (self.WHEEL_DIAMETER * 3.141)
-        ) * 365
+        ) * 360
         turn_rate = motor_angle_small / motor_angle_big
 
         if x > 0 and y > 0:
@@ -238,7 +238,7 @@ class DriveController:
             self.right_motor.run_angle(
                 -right_speed, right_deg, then=Stop.HOLD, wait=False
             )
-            self.left_motor.run_angle(left_speed, left_deg, then=Stop.HOLD, wait=True)
+            self.left_motor.run_angle(left_speed, left_deg-20, then=Stop.HOLD, wait=True)
 
     def __drive(self, speed, turn_rate):
         left_speed = speed
