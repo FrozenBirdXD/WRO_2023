@@ -55,8 +55,6 @@ graber = Graber(height_motor, graber_motor)
 # ----------------------------------------------------------------------------------------------
 
 
-
-
 def start():
     mnr.drive_distance(500, 40)
     mnr.u_turn(600, 235, 0.5)
@@ -113,26 +111,10 @@ def get_red_yellow():
 
 
 def place_red_yellow():
-    # straighten with border
-    # ------------------ old 
-    # mnr.turn(500, 180)
-    # mnr.drive_distance(500, 425)
-    # mnr.turn(500, -86)
-    # mnr.drive_distance(500, 340)
-    # -------------------
-    # ---------------- old old
-    # mnr.drive_distance(700, -160)
 
-    # put back red
-    # mnr.turn_after(220, 475, "left")
-    # -----------------
-
-    mnr.u_turn(500, 200, 0.5)
-    mnr.line_tracer_distance("right", 150, 250)
-    mnr.drive_distance(250, 275)
-    mnr.turn(400, -90)
-    mnr.drive_distance(500, 110)
-
+    mnr.turn(800, 185)
+    mnr.line_tracer_distance("right", 180)
+    mnr.u_turn(800, 260, 0.25)
     graber.height_up()
     mnr.drive_distance(1000, -60)
 
@@ -141,6 +123,11 @@ def place_red_yellow():
     graber.height_1()
     graber.graber_open()
     graber.height_up_aggressive()
+    # mnr.drive_distance(800, -20)
+    # mnr.u_turn(-800, -200, 0.25)
+    # mnr.shift(-50, 0, 800)
+    # mnr.line_tracer_distance("right", 50, -200)
+
 
 
 def rth():
@@ -234,7 +221,8 @@ if __name__ == "__main__":
     get_red_yellow()
     place_red_yellow()
     rth()
-    get_red_yellow()
-    stack_yellow()
-    stack_red()
-    trash()
+    # get_red_yellow()
+    # stack_yellow()
+    # stack_red()
+    # trash()
+
