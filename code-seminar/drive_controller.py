@@ -24,12 +24,14 @@ class DriveController:
         wheel_diameter: int,
         left_color_sensor: ColorSensor,
         right_color_sensor: ColorSensor,
+        back_color_sensor: ColorSensor,
     ):
         self.left_motor = left_motor
         self.right_motor = right_motor
         self.wheel_diameter = wheel_diameter
         self.left_color_sensor = left_color_sensor
         self.right_color_sensor = right_color_sensor
+        self.back_color_sensor = back_color_sensor
 
     def drive_until(self, speed, color: Color):
         while (
@@ -57,12 +59,21 @@ class DriveController:
             if side == "right":
                 value = self.right_color_sensor.reflection()
                 multiplier = 1
+                target = TARGET_REFLECTION
+                Kp = 20
             elif side == "left":
                 value = self.left_color_sensor.reflection()
                 multiplier = -1
+                target = TARGET_REFLECTION
+                Kp = 20
+            elif side == "back":
+                value = self.back_color_sensor.reflection()
+                multiplier = 1
+                target = TARGET_REFLECTION-5
+                Kp = 15
             else:
                 raise ValueError("Invalid side")
-
+            
             error = target - value
             integral += error
             derative = error - last_error
@@ -151,10 +162,10 @@ class DriveController:
         r_small = r_main - 0.5 * self.WHEEL_BASE_WIDTH
         motor_angle_big = (
             ((3.141 * r_big * 2) * factor) / (self.WHEEL_DIAMETER * 3.141)
-        ) * 360
+        ) * 365
         motor_angle_small = (
             ((3.141 * r_small * 2) * factor) / (self.WHEEL_DIAMETER * 3.141)
-        ) * 360
+        ) * 365
         turn_rate = motor_angle_small / motor_angle_big
 
         if x > 0 and y > 0:
@@ -238,7 +249,7 @@ class DriveController:
             self.right_motor.run_angle(
                 -right_speed, right_deg, then=Stop.HOLD, wait=False
             )
-            self.left_motor.run_angle(left_speed, left_deg-20, then=Stop.HOLD, wait=True)
+            self.left_motor.run_angle(left_speed, left_deg, then=Stop.HOLD, wait=True)
 
     def __drive(self, speed, turn_rate):
         left_speed = speed

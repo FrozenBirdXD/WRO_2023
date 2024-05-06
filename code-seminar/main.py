@@ -39,6 +39,8 @@ height_motor.control.limits(1500, 1500, 100)
 left_color_sensor = ColorSensor(Port.S4)
 right_color_sensor = ColorSensor(Port.S2)
 main_color_sensor = ColorSensor(Port.S3)
+back_color_sensor = ColorSensor(Port.S1)
+
 
 # ------------------------------------------------
 # just initialize global objects
@@ -49,6 +51,8 @@ mnr = DriveController(
     DriveController.WHEEL_DIAMETER,
     left_color_sensor,
     right_color_sensor,
+    back_color_sensor,
+
 )
 graber = Graber(height_motor, graber_motor)
 
