@@ -70,7 +70,7 @@ def get_red_yellow():
     graber.height_carry()
 
     # shift to next block
-    mnr.shift(-100, -130, 1200)
+    mnr.shift(-97, -130, 1200)
     mnr.drive_distance(1000, 130)
 
     # grab second block
@@ -116,19 +116,17 @@ def place_red_yellow():
 
     mnr.turn(800, 175)
     # mnr.line_tracer_distance("right", 100)
-    mnr.drive_distance(500,90)
-    mnr.u_turn(800, 230, 0.25)
+    mnr.drive_distance(500,120)
+    mnr.u_turn(800, 210, 0.25)
     graber.height_up()
-    mnr.drive_distance(1000, -60)
 
     # put back yellow
     # mnr.shift(-1, -250, 1200)
-    mnr.drive_distance(500,-230)
-    mnr.turn(300,-15)
+    mnr.drive_distance(500,-290)
+    mnr.turn(300,-20)
     graber.height_1()
     graber.graber_open()
     graber.height_up_aggressive()
-    mnr.turn(300,15)
 
 
 
@@ -185,15 +183,27 @@ def stack_red():
     graber.height_up()
 
 def trash():
-    mnr.turn(300,-175)
-    mnr.drive_distance(1000,420)
-    mnr.u_turn(600,-580,0.25)
+    mnr.turn(300,-155)
+    mnr.drive_distance(1000,470)
+    mnr.u_turn(600,-550,0.25)
     mnr.turn(300,-90)
-    mnr.drive_distance(1500,1100)
+    mnr.drive_distance(1500,1220)
     mnr.u_turn(600,-300,0.25)
     mnr.drive_distance(1000,330)
     mnr.turn(300,60)
-    mnr.drive_distance(1000,550)
+    mnr.drive_distance(1000,380)
+    mnr.u_turn(300,-250,0.18)
+
+    #pipe
+    mnr.u_turn(-300,-185,0.25)
+    mnr.drive_distance(300,-100)
+    graber.height_complete_breakdown()
+    graber.graber_open_for_pipe_because_just_because()
+    mnr.drive_distance(300,120)
+    graber.height_4()
+    mnr.turn(300, 30)
+    
+    
 
 
 
@@ -254,6 +264,7 @@ if __name__ == "__main__":
     # stack_yellow()
     # stack_red()
     trash()
+
 
 
 
