@@ -249,7 +249,7 @@ class DriveController:
             self.right_motor.run_angle(
                 -right_speed, right_deg, then=Stop.HOLD, wait=False
             )
-            self.left_motor.run_angle(left_speed, left_deg, then=Stop.HOLD, wait=True)
+            self.left_motor.run_angle(left_speed, left_deg+3, then=Stop.HOLD, wait=True)
 
     def __drive(self, speed, turn_rate):
         left_speed = speed
@@ -264,4 +264,4 @@ class DriveController:
 
     # constants
     WHEEL_DIAMETER = 62  # in millimeters
-    WHEEL_BASE_WIDTH = 161.5  # 161
+    WHEEL_BASE_WIDTH = 163.5  # 161
